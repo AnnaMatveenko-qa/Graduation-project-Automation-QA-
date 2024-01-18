@@ -12,11 +12,11 @@ import org.testng.annotations.BeforeMethod;
 import java.time.Duration;
 
 
-public class BaseTest {
+public abstract class BaseTest {
     protected WebDriver driver;
 
     @BeforeMethod
-    public void before() {
+    public void InitDriver() {
         driver = new ChromeDriver();
         driver.manage().window().maximize();
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(20));
@@ -26,7 +26,7 @@ public class BaseTest {
     }
 
     @AfterMethod
-    public void after() {
+    public void TearDown() {
         driver.quit();
     }
 
