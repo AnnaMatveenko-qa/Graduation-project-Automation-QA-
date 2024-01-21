@@ -73,7 +73,7 @@ public class MainPage extends BasePage {
 
     public ProductPage chooseProductPage(Integer index) {
         linksProductPages.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(1032))
+        new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//input[@class='eldo-input'])[1]")));
         return new ProductPage(driver);
     }
