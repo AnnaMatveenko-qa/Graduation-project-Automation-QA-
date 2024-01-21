@@ -8,6 +8,8 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 
+import static java.lang.Integer.parseInt;
+
 
 public class FiltersTest extends BaseTest {
     @DataProvider(name = "Data")
@@ -19,6 +21,17 @@ public class FiltersTest extends BaseTest {
 
         };
     }
+
+    @DataProvider(name = "Price")
+    public Object[][] checkPrice() {
+        return new Object[][]{
+                {"-1", "-1"},
+                {"0", "3798"},
+                {"3799", "82999"},
+                {"83000", "100000"}
+        };
+    }
+
 
     @Test(dataProvider = "Data")
     public void checkTitleFilters(String data, int index) {
@@ -53,9 +66,23 @@ public class FiltersTest extends BaseTest {
         Assert.assertTrue(mainPage.compareSelectFilterAndProductTitle(0));
     }
 
-    @Test
-    public void filterPriceByNumber() {
+    @Test(dataProvider = "Price")
+    public void filterPriceByNumber(String priceMin, String priceMax) {
         MainPage mainPage = new MainPage(driver);
+        Integer priceValueMinFromInput = Integer.valueOf((mainPage.getPriceInputNumberRangeMin()
+                .getAttribute("min")));
+        Integer priceValueMaxFromInput = Integer.valueOf((mainPage.getPriceInputNumberRangeMax()
+                .getAttribute("max")));
+        mainPage.putRangeValueOfPrice(priceMin, priceMax);
+        int priceValueMin = parseInt(priceMin.replaceAll(" ", ""));
+        int priceValueMax = parseInt(priceMax.replaceAll(" ", ""));
+        if ((priceValueMinFromInput<=priceValueMin) & (priceValueMax<=priceValueMaxFromInput)) {
+            Assert.assertTrue(mainPage.isPresentPriceInRange(priceValueMin, priceValueMax));
+            System.out.println("Everything is fine");
+        } else {
+            System.out.println("There is no such price range!!!");
+        }
+
 
     }
 

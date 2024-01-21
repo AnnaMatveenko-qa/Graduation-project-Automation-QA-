@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,10 +51,20 @@ public class MainPage extends BasePage {
     private WebElement buttonShowAllProducerName;
     @FindBy(xpath = "//div[@id='producer']/following-sibling::div//img")
     private List<WebElement> producerMarks;
+    @FindBy(xpath = "//input[@id='price-input-number-range-min']")
+    private WebElement priceInputNumberRangeMin;
+    @FindBy(xpath = "//input[@id='price-input-number-range-max']")
+    private WebElement priceInputNumberRangeMax;
+    @FindBy(xpath = "//div[@id='price']//button")
+    private WebElement buttonApplyPrice;
+    @FindBy(xpath = "//div[@id='tileBlockFooter']//span[contains(@class,'ui-library-subtitle1Bold')]")
+    private List<WebElement> productsPrices;
 
     public void putCheckProductCondition() {
         productCond.click();
         markDown.click();
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(chooseFilter));
     }
 
     public MainPage putCheckboxCityName(Integer index) {
@@ -66,14 +77,14 @@ public class MainPage extends BasePage {
     }
 
     public String getTitleProduct(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         return productsTitles.get(index).getText().toLowerCase();
     }
 
     public ProductPage chooseProductPage(Integer index) {
         linksProductPages.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//input[@class='eldo-input'])[1]")));
         return new ProductPage(driver);
     }
@@ -103,6 +114,48 @@ public class MainPage extends BasePage {
             }
         }
         return false;
+    }
+
+    public void putRangeValueOfPrice(String priceMin, String priceMax) {
+        priceInputNumberRangeMin.clear();
+        priceInputNumberRangeMin.sendKeys(priceMin);
+        priceInputNumberRangeMax.clear();
+        priceInputNumberRangeMax.sendKeys(priceMax);
+        buttonApplyPrice.click();
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(chooseFilter));
+    }
+
+    private List<String> hasValuePriceOfChooseRage() {
+        List<String> strings = new ArrayList<>();
+        for (WebElement productsPrice : productsPrices) {
+            String priceValue = productsPrice.getText().replaceAll(" ", "");
+            strings.add(priceValue);
+        }
+        return strings;
+    }
+
+    private List<Integer> convertToStringList() {
+        List<Integer> prices = new ArrayList<>();
+        List<String> strings = hasValuePriceOfChooseRage();
+        for (int i = 0; i < strings.size(); i++) {
+            prices.add(Integer.valueOf(strings.get(i)));
+        }
+        return prices;
+    }
+
+    public boolean isPresentPriceInRange(int priceMin, int priceMax) {
+        boolean result = false;
+        List<Integer> prices = convertToStringList();
+        for (Integer integer : prices) {
+            if (priceMin <= integer && integer <= priceMax) {
+                result = true;
+            } else {
+                return false;
+
+            }
+        }
+        return result;
     }
 
 
