@@ -26,7 +26,10 @@ public class ProductPage extends BasePage {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(By.
                         xpath("//input[@class='eldo-input']")));
-       return valueInputCity.getAttribute("value").toLowerCase();
+        return valueInputCity.getAttribute("value").toLowerCase();
     }
 
+    public String getTitleProduct() {
+        return mainTitle.getText().toLowerCase();
+    }
 }

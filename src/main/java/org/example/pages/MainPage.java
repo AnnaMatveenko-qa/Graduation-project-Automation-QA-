@@ -5,10 +5,12 @@ import lombok.Getter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.swing.*;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +90,12 @@ public class MainPage extends BasePage {
     public ProductPage chooseProductPage(Integer index) {
         linksProductPages.get(index).click();
         new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By.
-                        xpath("//input[@class='eldo-input']")));
+                .until(ExpectedConditions.presenceOfElementLocated(By
+                        .xpath("//div[@class='product-name']")));
         return new ProductPage(driver);
     }
 
-    public String getTitleFiltersText(int index) {
+    public String getTitleFiltersText(Integer index) {
         return titleFilters.get(index).getText();
 
     }
@@ -108,6 +110,8 @@ public class MainPage extends BasePage {
     }
 
     public boolean compareSelectFilterAndProductTitle(Integer index) {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(chooseFilter));
         String[] strs = chooseFilter.getText().toLowerCase().trim().split(": ");
         String[] strings = productsTitles.get(index).getText().toLowerCase().trim().split(" ");
         for (String a : strs) {
@@ -124,8 +128,9 @@ public class MainPage extends BasePage {
     public void putMinValueOfPrice(String priceMin) {
         priceInputNumberRangeMin.clear();
         priceInputNumberRangeMin.sendKeys(priceMin);
-        new WebDriverWait(driver, Duration.ofSeconds(20))
-                .until((ExpectedConditions.elementToBeClickable(buttonApplyPrice)));
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until((ExpectedConditions.textToBePresentInElement(priceInputNumberRangeMin,priceMin)));
+                        //elementToBeClickable(buttonApplyPrice)));
 
     }
 
@@ -133,6 +138,8 @@ public class MainPage extends BasePage {
         priceInputNumberRangeMax.clear();
         priceInputNumberRangeMax.sendKeys(priceMax);
         buttonApplyPrice.click();
+       new WebDriverWait(driver, Duration.ofSeconds(5))
+              .until(ExpectedConditions.textToBePresentInElement(productsHeader,priceMax));
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
     }
@@ -154,12 +161,16 @@ public class MainPage extends BasePage {
             if (priceMin <= prices.get(i) && prices.get(i) <= priceMax) {
                 result = true;
             } else {
-                 return false;
+                return false;
             }
         }
         return result;
     }
 
+  //  public void moveSlider(String priceMin, String priceMax) {
+   //    Actions actions = new Actions(driver);
+    //    actions.clickAndHold(rangeMinBySlider)/
+   // }
 
 }
 

@@ -1,14 +1,12 @@
 import org.example.pages.MainPage;
 import org.example.pages.ProductPage;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
 
-import static java.lang.Integer.parseInt;
+import static java.lang.Integer.valueOf;
 
 
 public class FiltersTest extends BaseTest {
@@ -25,9 +23,9 @@ public class FiltersTest extends BaseTest {
     @DataProvider(name = "Price")
     public Object[][] checkPrice() {
         return new Object[][]{
-                {"15000", "75000"}
-               // {"3799", "82999"}
-
+                {"15 000", "75 000"}
+                //{"4000", "80000"},
+              //  {"25000", "75000"}
         };
     }
 
@@ -43,9 +41,10 @@ public class FiltersTest extends BaseTest {
     @Test
     public void filterAvailabilityCity() {
         MainPage mainPage = new MainPage(driver);
-        String chooseCity = mainPage.putCheckboxCityName(1).getChooseFilter().getText().toLowerCase();
-        ProductPage productPage = mainPage.chooseProductPage(1);
-        String city = productPage.getValueInputCity().getAttribute("value").toLowerCase();
+        mainPage.putCheckboxCityName(10);
+        String chooseCity = mainPage.getChooseFilter().getText().toLowerCase();
+        ProductPage productPage = mainPage.chooseProductPage(0);
+        String city = productPage.chooseNameCityFromFieldInput();
         Assert.assertTrue(chooseCity.contains(city));
     }
 
@@ -54,7 +53,9 @@ public class FiltersTest extends BaseTest {
         String expected = "Уцінка";
         MainPage mainPage = new MainPage(driver);
         mainPage.putCheckProductCondition();
-        Assert.assertTrue(mainPage.getTitleProduct(1).contains(expected.toLowerCase()));
+        ProductPage productPage = mainPage.chooseProductPage(8);
+        Assert.assertTrue(productPage.getTitleProduct().contains(expected.toLowerCase()));
+
 
     }
 
@@ -68,22 +69,23 @@ public class FiltersTest extends BaseTest {
     @Test(dataProvider = "Price")
     public void filterPriceByNumber(String priceMin, String priceMax) {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putRangeValueOfPrice(priceMin, priceMax);
-        int priceValueMin = parseInt(priceMin.replaceAll(" ", ""));
-        int priceValueMax = parseInt(priceMax.replaceAll(" ", ""));
-        Assert.assertTrue(mainPage.isPresentPriceInRange(priceValueMin, priceValueMax));
+        mainPage.putMinValueOfPrice(priceMin);
+        int priceValueMin = valueOf(priceMin.replaceAll(" ", ""));
+        mainPage.putMaxValueOfPrice(priceMax);
+        int priceValueMax = valueOf(priceMax.replaceAll(" ", ""));
+        Assert.assertTrue(mainPage.
+                isPresentPriceInRange(priceValueMin, priceValueMax));
     }
 
+    @Test(dataProvider = "Price")
+    public void filterPriceBySlider() {
+  //  MainPage mainPage = new MainPage(driver);
+        }
 
-@Test
-public void filterPriceBySlider() {
+    @Test
+    public void filterTypeProduct() {
 
-}
-
-@Test
-public void filterTypeProduct() {
-
-}
+    }
 
 }
 
