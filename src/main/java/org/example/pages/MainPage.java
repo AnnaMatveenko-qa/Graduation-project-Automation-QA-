@@ -81,15 +81,15 @@ public class MainPage extends BasePage {
 
     public String getTitleProduct(Integer index) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
-               .until(ExpectedConditions.visibilityOf(chooseFilter));
+                .until(ExpectedConditions.visibilityOf(chooseFilter));
         return productsTitles.get(index).getText().toLowerCase();
     }
 
     public ProductPage chooseProductPage(Integer index) {
         linksProductPages.get(index).click();
-       new WebDriverWait(driver, Duration.ofSeconds(5))
-       .until(ExpectedConditions.presenceOfElementLocated(By.
-               xpath("//input[@class='eldo-input']")));
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.presenceOfElementLocated(By.
+                        xpath("//input[@class='eldo-input']")));
         return new ProductPage(driver);
     }
 
@@ -103,7 +103,7 @@ public class MainPage extends BasePage {
         buttonShowAllProducerName.click();
         producerMarks.get(index).click();
         new WebDriverWait(driver, Duration.ofSeconds(5))
-               .until(ExpectedConditions.visibilityOf(chooseFilter));
+                .until(ExpectedConditions.visibilityOf(chooseFilter));
 
     }
 
@@ -125,7 +125,7 @@ public class MainPage extends BasePage {
         priceInputNumberRangeMin.clear();
         priceInputNumberRangeMin.sendKeys(priceMin);
         new WebDriverWait(driver, Duration.ofSeconds(20))
-                .until((ExpectedConditions. elementToBeClickable(buttonApplyPrice)));
+                .until((ExpectedConditions.elementToBeClickable(buttonApplyPrice)));
 
     }
 
@@ -133,8 +133,8 @@ public class MainPage extends BasePage {
         priceInputNumberRangeMax.clear();
         priceInputNumberRangeMax.sendKeys(priceMax);
         buttonApplyPrice.click();
-       new WebDriverWait(driver, Duration.ofSeconds(5))
-              .until(ExpectedConditions.visibilityOf(chooseFilter));
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(chooseFilter));
     }
 
     private List<Integer> conversionPriceList() {
@@ -150,14 +150,10 @@ public class MainPage extends BasePage {
     public boolean isPresentPriceInRange(Integer priceMin, Integer priceMax) {
         boolean result = false;
         List<Integer> prices = conversionPriceList();
-        for (int i = 0; i < prices.size()-4; i++) {
-             if (priceMin <= prices.get(i) && prices.get(i) <= priceMax) {
-                System.out.println(prices.get(i));
-                System.out.println(priceMin <= prices.get(i) && prices.get(i) <= priceMax);
-                 result = true;
+        for (int i = 0; i < prices.size() - 4; i++) {
+            if (priceMin <= prices.get(i) && prices.get(i) <= priceMax) {
+                result = true;
             } else {
-                 System.out.println(priceMin <= prices.get(i) && prices.get(i) <= priceMax);
-                 System.out.println(prices.get(i));
                  return false;
             }
         }
