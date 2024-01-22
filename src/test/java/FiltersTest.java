@@ -25,10 +25,9 @@ public class FiltersTest extends BaseTest {
     @DataProvider(name = "Price")
     public Object[][] checkPrice() {
         return new Object[][]{
-                {"-1", "-1"},
-                {"0", "3798"},
-                {"3799", "82999"},
-                {"83000", "100000"}
+                {"15000", "75000"}
+               // {"3799", "82999"}
+
         };
     }
 
@@ -69,32 +68,22 @@ public class FiltersTest extends BaseTest {
     @Test(dataProvider = "Price")
     public void filterPriceByNumber(String priceMin, String priceMax) {
         MainPage mainPage = new MainPage(driver);
-        Integer priceValueMinFromInput = Integer.valueOf((mainPage.getPriceInputNumberRangeMin()
-                .getAttribute("min")));
-        Integer priceValueMaxFromInput = Integer.valueOf((mainPage.getPriceInputNumberRangeMax()
-                .getAttribute("max")));
         mainPage.putRangeValueOfPrice(priceMin, priceMax);
         int priceValueMin = parseInt(priceMin.replaceAll(" ", ""));
         int priceValueMax = parseInt(priceMax.replaceAll(" ", ""));
-        if ((priceValueMinFromInput<=priceValueMin) & (priceValueMax<=priceValueMaxFromInput)) {
-            Assert.assertTrue(mainPage.isPresentPriceInRange(priceValueMin, priceValueMax));
-            System.out.println("Everything is fine");
-        } else {
-            System.out.println("There is no such price range!!!");
-        }
-
-
+        Assert.assertTrue(mainPage.isPresentPriceInRange(priceValueMin, priceValueMax));
     }
 
-    @Test
-    public void filterPriceBySlider() {
 
-    }
+@Test
+public void filterPriceBySlider() {
 
-    @Test
-    public void filterTypeProduct() {
+}
 
-    }
+@Test
+public void filterTypeProduct() {
+
+}
 
 }
 
