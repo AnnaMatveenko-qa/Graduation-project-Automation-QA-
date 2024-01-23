@@ -23,9 +23,9 @@ public class FiltersTest extends BaseTest {
     @DataProvider(name = "Price")
     public Object[][] checkPrice() {
         return new Object[][]{
-                {"15 000", "75 000"}
-                //{"4000", "80000"},
-              //  {"25000", "75000"}
+              {"15 000", "75 000"},
+                {"4 000", "80 000"},
+               {"25 000", "72 000"}
         };
     }
 
@@ -53,7 +53,7 @@ public class FiltersTest extends BaseTest {
         String expected = "Уцінка";
         MainPage mainPage = new MainPage(driver);
         mainPage.putCheckProductCondition();
-        ProductPage productPage = mainPage.chooseProductPage(8);
+        ProductPage productPage = mainPage.chooseProductPage(2);
         Assert.assertTrue(productPage.getTitleProduct().contains(expected.toLowerCase()));
 
 
@@ -62,26 +62,24 @@ public class FiltersTest extends BaseTest {
     @Test
     public void filterProducer() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putCheckboxProducerName(0);
-        Assert.assertTrue(mainPage.compareSelectFilterAndProductTitle(0));
+        mainPage.putCheckboxProducerName(5);
+        Assert.assertTrue(mainPage.compareSelectFilterAndProductTitle(12));
     }
 
     @Test(dataProvider = "Price")
     public void filterPriceByNumber(String priceMin, String priceMax) {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putMinValueOfPrice(priceMin);
         int priceValueMin = valueOf(priceMin.replaceAll(" ", ""));
-        mainPage.putMaxValueOfPrice(priceMax);
         int priceValueMax = valueOf(priceMax.replaceAll(" ", ""));
-        Assert.assertTrue(mainPage.
-                isPresentPriceInRange(priceValueMin, priceValueMax));
+        Assert.assertTrue(mainPage.putMinMaxValueOfPrice(priceMin, priceMax)
+                .isPresentPriceInRange(priceValueMin, priceValueMax));
     }
 
-    @Test(dataProvider = "Price")
-    public void filterPriceBySlider() {
-  //  MainPage mainPage = new MainPage(driver);
-        }
-
+    /*  @Test(dataProvider = "Price")
+      public void filterPriceBySlider() {
+    //  MainPage mainPage = new MainPage(driver);
+          }
+  */
     @Test
     public void filterTypeProduct() {
 

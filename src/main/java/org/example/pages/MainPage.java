@@ -3,14 +3,16 @@ package org.example.pages;
 
 import lombok.Getter;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import javax.swing.*;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,10 @@ public class MainPage extends BasePage {
 
     public MainPage(WebDriver driver) {
         super(driver);
-
+        this.sortPage = new SortPage(driver);
     }
 
-
+    private SortPage sortPage;
     @FindBy(xpath = "//div[@id='city']/span")
     private WebElement availInCity;
     @FindBy(xpath = "//div[@id='discounted_item']")
@@ -41,12 +43,12 @@ public class MainPage extends BasePage {
     private WebElement markDown;
     @FindBy(xpath = "//div[@name='allPromoGoods']//h1")
     private WebElement productsHeader;
-    @FindBy(xpath = "//div[@id='tileBlock']/child::div[3]//span")
-    private List<WebElement> productsTitles;
+    @FindBy(xpath = "//div[contains(@class,'TileBlockstyled__StyledTileBlockB')]//span")
+    private List<WebElement> listTitleProducts;
     @FindBy(xpath = "//div[@id='tileBlock']/div[2]/a")
     private List<WebElement> linksProductPages;
-    @FindBy(xpath = "//div[contains(@class,'StyledApplied')]//span[contains(@class,'ui-library-body2Medium')]")
-    private WebElement chooseFilter;
+    @FindBy(xpath = "//div[contains(@class,'StyledAppliedFiltersstyled__StyledAppliedFiltersContainer')]")
+    private WebElement containerWithChoosedFilters;
     @FindBy(xpath = "//div[contains(@class,'ui-library-gridAlignItems-d14c ui-library-gridCustomColum')]")
     private List<WebElement> titleFilters;
     @FindBy(xpath = "//div[@id='producer']/following-sibling::div//button")
@@ -65,6 +67,8 @@ public class MainPage extends BasePage {
     private WebElement buttonApplyPrice;
     @FindBy(xpath = "//div[@id='tileBlockFooter']//span[contains(@class,'ui-library-subtitle1Bold')]")
     private List<WebElement> productsPrices;
+    @FindBy(xpath = "//div[@class='ui-library-typographyContainer-5489']/span")
+    private WebElement chooseFilter;
 
     public void putCheckProductCondition() {
         productCond.click();
@@ -81,11 +85,6 @@ public class MainPage extends BasePage {
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
     }
 
-    public String getTitleProduct(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.visibilityOf(chooseFilter));
-        return productsTitles.get(index).getText().toLowerCase();
-    }
 
     public ProductPage chooseProductPage(Integer index) {
         linksProductPages.get(index).click();
@@ -100,22 +99,24 @@ public class MainPage extends BasePage {
 
     }
 
-    public void putCheckboxProducerName(Integer index) {
+    public MainPage putCheckboxProducerName(Integer index) {
         buttonShowAllProducerName.isDisplayed();
         buttonShowAllProducerName.click();
         producerMarks.get(index).click();
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
-
+        return this;
     }
 
     public boolean compareSelectFilterAndProductTitle(Integer index) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         String[] strs = chooseFilter.getText().toLowerCase().trim().split(": ");
-        String[] strings = productsTitles.get(index).getText().toLowerCase().trim().split(" ");
+        String[] strings = listTitleProducts.get(index).getText().toLowerCase().trim().split(" ");
         for (String a : strs) {
+            System.out.println(a);
             for (String string : strings) {
+                System.out.println(string);
                 if (Objects.equals(a, string)) {
                     return true;
                 }
@@ -125,24 +126,18 @@ public class MainPage extends BasePage {
     }
 
 
-    public void putMinValueOfPrice(String priceMin) {
-        priceInputNumberRangeMin.clear();
-        priceInputNumberRangeMin.sendKeys(priceMin);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until((ExpectedConditions.textToBePresentInElement(priceInputNumberRangeMin,priceMin)));
-                        //elementToBeClickable(buttonApplyPrice)));
-
-    }
-
-    public void putMaxValueOfPrice(String priceMax) {
+    public MainPage putMinMaxValueOfPrice(String priceMin, String priceMax) {
+        priceInputNumberRangeMax.click();
         priceInputNumberRangeMax.clear();
-        priceInputNumberRangeMax.sendKeys(priceMax);
+        new Actions(driver).pause(Duration.ofSeconds(3)).sendKeys(priceInputNumberRangeMax, priceMax).build().perform();
+        priceInputNumberRangeMin.click();
+        priceInputNumberRangeMin.clear();
+        new Actions(driver).sendKeys(priceInputNumberRangeMin, priceMin).scrollToElement(titleFilters.get(5)).build().perform();
         buttonApplyPrice.click();
-       new WebDriverWait(driver, Duration.ofSeconds(5))
-              .until(ExpectedConditions.textToBePresentInElement(productsHeader,priceMax));
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.visibilityOf(chooseFilter));
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(chooseFilter));
+        return this;
     }
+
 
     private List<Integer> conversionPriceList() {
         List<Integer> prices = new ArrayList<>();
@@ -155,10 +150,13 @@ public class MainPage extends BasePage {
 
 
     public boolean isPresentPriceInRange(Integer priceMin, Integer priceMax) {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(containerWithChoosedFilters));
         boolean result = false;
         List<Integer> prices = conversionPriceList();
         for (int i = 0; i < prices.size() - 4; i++) {
             if (priceMin <= prices.get(i) && prices.get(i) <= priceMax) {
+
                 result = true;
             } else {
                 return false;
@@ -167,10 +165,39 @@ public class MainPage extends BasePage {
         return result;
     }
 
-  //  public void moveSlider(String priceMin, String priceMax) {
-   //    Actions actions = new Actions(driver);
+    //  public void moveSlider(String priceMin, String priceMax) {
+    //    Actions actions = new Actions(driver);
     //    actions.clickAndHold(rangeMinBySlider)/
-   // }
+    // }
+    public boolean comparePricesOrderOfIncrease() {
+        boolean result = false;
+        List<Integer> prices = conversionPriceList();
+        for (int i = 0; i < prices.size() - 5; i++) {
+            if (prices.get(i) <= prices.get(i + 1)) {
+                System.out.println(prices.get(i));
+                result = true;
+            } else {
+                result = false;
+            }
+        }
+        return result;
+    }
+
+    public boolean comparePricesDescendingOrder(Integer index) {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(index)));
+        boolean result = false;
+        List<Integer> prices = conversionPriceList();
+        for (int i = 0; i < prices.size() - 5; i++) {
+            if (prices.get(i) >= prices.get(i + 1)) {
+                System.out.println(prices.get(i));
+                result = true;
+            } else {
+                result = false;
+            }
+        }
+        return result;
+    }
 
 }
 
