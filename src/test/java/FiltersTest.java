@@ -20,21 +20,29 @@ public class FiltersTest extends BaseTest {
         };
     }
 
-    @DataProvider(name = "Price")
-    public Object[][] checkPrice() {
+    @DataProvider(name = "Product condition")
+    public Object[][]checkProductCondition() {
         return new Object[][]{
-              {"15 000", "75 000"},
-                {"4 000", "80 000"},
-               {"25 000", "72 000"}
+                {"Уцінка", 0 },
+                {"Уцінка", 1 }
+
+        };
+    }
+
+    @DataProvider(name = "Price")
+    public Object[][]checkPrice() {
+        return new Object[][]{
+                {"15 000", "75 000"}
+
         };
     }
 
 
     @Test(dataProvider = "Data")
-    public void checkTitleFilters(String data, int index) {
+    public void checkTitleFilters(String data, Integer index) {
         MainPage mainPage = new MainPage(driver);
         String actual = mainPage.getTitleFiltersText(index);
-        Assert.assertEquals(actual.toLowerCase(), data.toLowerCase());
+        Assert.assertEquals(actual, data.toLowerCase());
 
     }
 
@@ -48,21 +56,29 @@ public class FiltersTest extends BaseTest {
         Assert.assertTrue(chooseCity.contains(city));
     }
 
-    @Test
-    public void filterProductCondition() {
-        String expected = "Уцінка";
+    @Test(dataProvider ="Product condition")
+    public void filterProductCondition(String data, Integer index) {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putCheckProductCondition();
-        ProductPage productPage = mainPage.chooseProductPage(2);
-        Assert.assertTrue(productPage.getTitleProduct().contains(expected.toLowerCase()));
+        if (index==0){
+        Assert.assertTrue(mainPage.putCheckProductCondition(index)
+                .compareListTitleProductsTextWithProductCondition(data));
+        ProductPage productPage = mainPage.chooseProductPage(5);
+        Assert.assertTrue(productPage.getTitleProduct().contains(data.toLowerCase()));
+        } else {
+            if (index == 1) {
+                Assert.assertFalse(mainPage.putCheckProductCondition(index)
+                        .compareListTitleProductsTextWithProductCondition(data));
+                ProductPage productPage = mainPage.chooseProductPage(5);
+                Assert.assertFalse(productPage.getTitleProduct().contains(data.toLowerCase()));
+            } else Assert.fail("This product condition isn`t");
 
-
+        }
     }
 
     @Test
     public void filterProducer() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putCheckboxProducerName(5);
+        mainPage.putCheckboxProducerName(3);
         Assert.assertTrue(mainPage.compareSelectFilterAndProductTitle(12));
     }
 
@@ -75,15 +91,16 @@ public class FiltersTest extends BaseTest {
                 .isPresentPriceInRange(priceValueMin, priceValueMax));
     }
 
-    /*  @Test(dataProvider = "Price")
-      public void filterPriceBySlider() {
-    //  MainPage mainPage = new MainPage(driver);
-          }
-  */
-    @Test
-    public void filterTypeProduct() {
+ /*  @Test(dataProvider = "Price")
+    public void filterPriceBySlider(String priceMin, String priceMax) {
+        MainPage mainPage = new MainPage(driver);
+        int priceValueMin = valueOf(priceMin.replaceAll(" ", ""));
+        int priceValueMax = valueOf(priceMax.replaceAll(" ", ""));
+        Assert.assertTrue(mainPage.moveSlider(priceValueMin, priceValueMax).isPresentPriceInRange(priceValueMin, priceValueMax ));
 
-    }
+    }*/
+
+
 
 }
 

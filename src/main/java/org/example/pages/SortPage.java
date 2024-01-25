@@ -14,7 +14,8 @@ import java.util.List;
 
 @Getter
 public class SortPage extends BasePage {
-    @FindBy(xpath = "//div[@name='catalog-top']//div[contains(@class,'StyledSortingDesktopstyled__StyledFilterItem')]")
+    @FindBy(xpath = "//div[@name='catalog-top']//div[contains(@class,'StyledSortingDesktopstyled__StyledFilterItem')]" +
+            "/div[contains(@class,'ui-library')]")
     private List<WebElement> sortsNames;
 
 
@@ -24,9 +25,13 @@ public class SortPage extends BasePage {
 
     public SortPage chooseSortName(Integer index) {
         sortsNames.get(index).click();
-        sortsNames.get(index).isDisplayed();
-        new WebDriverWait(driver, Duration.ofSeconds(5)).
+        new WebDriverWait(driver, Duration.ofSeconds(3)).
                 until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
         return this;
+
     }
+
+
+
+
 }

@@ -2,7 +2,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-
+import org.openqa.selenium.chrome.ChromeOptions;
 import java.time.Duration;
 
 
@@ -12,8 +12,13 @@ public abstract class BaseTest {
 
     @BeforeMethod
     public void InitDriver() {
-        driver = new ChromeDriver();
-       // driver.manage().window().maximize();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--remote-debugging-pipe");
+        options.addArguments("--headless");
+        options.addArguments("--disable-dev-shm-usage");
+        driver = new ChromeDriver(options);
+        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
 

@@ -7,16 +7,21 @@ public class SortingTest extends BaseTest {
 
 
     @Test
-    public void SortByIncreasePrice() {
+    public void sortByIncreasePrice() {
         MainPage mainPage = new MainPage(driver);
         mainPage.getSortPage().chooseSortName(1);
         Assert.assertTrue(mainPage.comparePricesOrderOfIncrease());
     }
 
     @Test
-    public void SortByDecreasePrice() {
+    public void sortByDecreasePrice() {
         MainPage mainPage = new MainPage(driver);
         mainPage.getSortPage().chooseSortName(1).chooseSortName(1);
-        Assert.assertTrue(mainPage.comparePricesDescendingOrder(1));
+        Assert.assertTrue(mainPage.comparePricesDescendingOrder());
     }
+@Test
+    public void sortBeName(){
+
+}
+
 }

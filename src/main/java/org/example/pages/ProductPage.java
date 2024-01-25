@@ -23,13 +23,14 @@ public class ProductPage extends BasePage {
     }
 
     public String chooseNameCityFromFieldInput() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By.
-                        xpath("//input[@class='eldo-input']")));
+        new WebDriverWait(driver, Duration.ofSeconds(7))
+                .until(ExpectedConditions.visibilityOf(valueInputCity));
         return valueInputCity.getAttribute("value").toLowerCase();
     }
 
     public String getTitleProduct() {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(mainTitle));
         return mainTitle.getText().toLowerCase();
     }
 }
