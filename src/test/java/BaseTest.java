@@ -3,11 +3,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.testng.annotations.BeforeSuite;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import java.time.Duration;
 
 
 public abstract class BaseTest {
     protected WebDriver driver;
+
+    @BeforeSuite
+    static void setupClass() {
+        WebDriverManager.chromedriver().setup();
+    }
 
 
     @BeforeMethod
@@ -17,8 +24,8 @@ public abstract class BaseTest {
         options.addArguments("--remote-debugging-pipe");
         options.addArguments("--headless");
         options.addArguments("--disable-dev-shm-usage");
-        driver = new ChromeDriver(options);
-       // driver.manage().window().maximize();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
 
