@@ -24,14 +24,18 @@ public class SortPage extends BasePage {
     }
 
     public SortPage chooseSortName(Integer index) {
-        sortsNames.get(index).click();
+        try {
+            sortsNames.get(index).click();
+        } catch (org.openqa.selenium.StaleElementReferenceException ex) {
+            sortsNames.get(index).click();
+        }
         new WebDriverWait(driver, Duration.ofSeconds(3)).
                 until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
+
+
         return this;
 
     }
-
-
 
 
 }

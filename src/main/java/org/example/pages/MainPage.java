@@ -1,7 +1,6 @@
 package org.example.pages;
 
 
-
 import lombok.Getter;
 import org.openqa.selenium.*;
 
@@ -66,7 +65,7 @@ public class MainPage extends BasePage {
     private WebElement buttonApplyPrice;
     @FindBy(xpath = " //div[@name='catalog-top']//div[@id='tileBlockFooter']//span[contains(@class,'ui-library-subtitle1Bold')]")
     private List<WebElement> productsPrices;
-    @FindBy(xpath = "//div[@class='ui-library-typographyContainer-5489']/span")
+    @FindBy(xpath = "//div[contains(@class,'ui-library-typography')]/span")
     private WebElement chooseFilter;
 
     public MainPage putCheckProductCondition(Integer index) {
@@ -99,18 +98,29 @@ public class MainPage extends BasePage {
         return new ProductPage(driver);
     }
 
-    public String getTitleFiltersText(Integer index) {
-        return
-                titleFilters.get(index).getText().toLowerCase();
+
+
+    public boolean compareListTitleFiltersTextWithExpected(List<String> expected) {
+        List<String> listTitleFiltersText = new ArrayList<>();
+        for (int i = 0; i < titleFilters.size(); i++)
+            listTitleFiltersText.add(titleFilters.get(i).getText());
+        for (int i = 0; i < listTitleFiltersText.size(); i++) {
+            for (int j = 0; j < expected.size(); j++) {
+                if (listTitleFiltersText.get(i).toLowerCase().contains(expected.get(j).toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public boolean compareListTitleProductsTextWithProductCondition(String expected) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         List<String> titleProducts = new ArrayList<>();
-        for (int i = 0; i < listTitleProducts.size()-4; i++)
+        for (int i = 0; i < listTitleProducts.size() - 4; i++)
             titleProducts.add(listTitleProducts.get(i).getText());
-        for (int i = 0; i < titleProducts.size() - 4; i++) {
+        for (int i = 0; i < titleProducts.size(); i++) {
             if (titleProducts.get(i).toLowerCase().contains(expected.toLowerCase())) {
                 return true;
             }
@@ -150,7 +160,7 @@ public class MainPage extends BasePage {
         priceInputNumberRangeMin.click();
         priceInputNumberRangeMin.clear();
         new Actions(driver).sendKeys(priceInputNumberRangeMin, priceMin).scrollToElement(titleFilters.get(5)).build().perform();
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
+        new WebDriverWait(driver, Duration.ofSeconds(7)).until(ExpectedConditions
                 .elementToBeClickable(buttonApplyPrice));
         buttonApplyPrice.click();
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(chooseFilter));
@@ -187,8 +197,8 @@ public class MainPage extends BasePage {
 
 
     public boolean comparePricesOrderOfIncrease() {
-       new WebDriverWait(driver, Duration.ofSeconds(5))
-               .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
         boolean result = false;
         List<Integer> prices = conversionPriceList();
         for (int i = 0; i < prices.size() - 5; i++) {
@@ -202,8 +212,8 @@ public class MainPage extends BasePage {
     }
 
     public boolean comparePricesDescendingOrder() {
-       new WebDriverWait(driver, Duration.ofSeconds(7))
-        .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
+        new WebDriverWait(driver, Duration.ofSeconds(7))
+                .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
         boolean result = false;
         List<Integer> prices = conversionPriceList();
         for (int i = 0; i < prices.size() - 5; i++) {
@@ -217,10 +227,10 @@ public class MainPage extends BasePage {
     }
 
     public MainPage moveSlider(Integer priceMin, Integer priceMax) {
-        System.out.println(rangeMaxBySlider.getLocation());
+        //   System.out.println(rangeMaxBySlider.getLocation());
 
 
-        System.out.println(rangeMinBySlider.getLocation());
+     /*   System.out.println(rangeMinBySlider.getLocation());
         Dimension sizeMin = rangeMinBySlider.getSize();
         Dimension sizeMax = rangeMinBySlider.getSize();
         System.out.println(sizeMax);
@@ -232,7 +242,7 @@ public class MainPage extends BasePage {
         System.out.println(offsetXMin);
         System.out.println(offsetYMin);
         System.out.println(offsetXMax);
-        System.out.println(offsetYMax);
+        System.out.println(offsetYMax);*/
 
 
         new Actions(driver).moveToElement(rangeMinBySlider).dragAndDropBy(rangeMinBySlider, 138, 0)
