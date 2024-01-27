@@ -48,7 +48,7 @@ public class MainPage extends BasePage {
     private List<WebElement> linksProductPages;
     @FindBy(xpath = "//div[contains(@class,'StyledAppliedFiltersstyled__StyledAppliedFiltersContainer')]")
     private WebElement containerWithChoosedFilters;
-    @FindBy(xpath = "//div[contains(@class,'ui-library-gridAlignItems-d14c ui-library-gridCustomColum')]")
+    @FindBy(xpath = "//div[contains(@class,'ui-library-gridAlignItems-d14c ui-library-gridCustomColum')]/span")
     private List<WebElement> titleFilters;
     @FindBy(xpath = "//div[@id='producer']/following-sibling::div//button")
     private WebElement buttonShowAllProducerName;
@@ -88,10 +88,12 @@ public class MainPage extends BasePage {
 
 
     public ProductPage chooseProductPage(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
+        new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.elementToBeClickable(linksProductPages.get(index)));
         linksProductPages.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.presenceOfElementLocated(By
                         .xpath("//div[@class='product-name']")));
         return new ProductPage(driver);
