@@ -1,7 +1,7 @@
 package org.example.pages;
 
 
-import dev.failsafe.internal.util.Assert;
+
 import lombok.Getter;
 import org.openqa.selenium.*;
 
@@ -62,9 +62,9 @@ public class MainPage extends BasePage {
     private WebElement rangeMinBySlider;
     @FindBy(xpath = "//input[@id='input-range-max']")
     private WebElement rangeMaxBySlider;
-    @FindBy(xpath = "//div[@id='price']//button")
+    @FindBy(xpath = "//div[@id='price']//button[contains(@class,'ui-library-action')]")
     private WebElement buttonApplyPrice;
-    @FindBy(xpath = "//div[@id='tileBlockFooter']//span[contains(@class,'ui-library-subtitle1Bold')]")
+    @FindBy(xpath = " //div[@name='catalog-top']//div[@id='tileBlockFooter']//span[contains(@class,'ui-library-subtitle1Bold')]")
     private List<WebElement> productsPrices;
     @FindBy(xpath = "//div[@class='ui-library-typographyContainer-5489']/span")
     private WebElement chooseFilter;
@@ -98,14 +98,15 @@ public class MainPage extends BasePage {
     }
 
     public String getTitleFiltersText(Integer index) {
-        return titleFilters.get(index).getText().toLowerCase();
+        return
+                titleFilters.get(index).getText().toLowerCase();
     }
 
     public boolean compareListTitleProductsTextWithProductCondition(String expected) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         List<String> titleProducts = new ArrayList<>();
-        for (int i = 0; i < listTitleProducts.size(); i++)
+        for (int i = 0; i < listTitleProducts.size()-4; i++)
             titleProducts.add(listTitleProducts.get(i).getText());
         for (int i = 0; i < titleProducts.size() - 4; i++) {
             if (titleProducts.get(i).toLowerCase().contains(expected.toLowerCase())) {
@@ -147,6 +148,8 @@ public class MainPage extends BasePage {
         priceInputNumberRangeMin.click();
         priceInputNumberRangeMin.clear();
         new Actions(driver).sendKeys(priceInputNumberRangeMin, priceMin).scrollToElement(titleFilters.get(5)).build().perform();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
+                .elementToBeClickable(buttonApplyPrice));
         buttonApplyPrice.click();
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(chooseFilter));
         return this;
