@@ -91,6 +91,7 @@ public class MainPage extends BasePage {
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         new WebDriverWait(driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.elementToBeClickable(linksProductPages.get(index)));
+        linksProductPages.get(index).isDisplayed();
         linksProductPages.get(index).click();
         new WebDriverWait(driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.presenceOfElementLocated(By
