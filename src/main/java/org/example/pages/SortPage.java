@@ -10,6 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,11 +32,10 @@ public class SortPage extends BasePage {
         }
         new WebDriverWait(driver, Duration.ofSeconds(3)).
                 until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
-
-
         return this;
 
     }
+
 
 
 }

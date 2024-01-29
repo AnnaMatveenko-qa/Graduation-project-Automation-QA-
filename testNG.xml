@@ -11,4 +11,9 @@
             <class name="SortingTest"/>
         </classes>
     </test>
+    <test name="product">
+        <classes>
+            <class name="ProductPageTest"/>
+        </classes>
+    </test>
 </suite>

@@ -12,14 +12,19 @@ import java.time.Duration;
 
 @Getter
 public class ProductPage extends BasePage {
-
+    private Header header;
     @FindBy(xpath = "(//input[@class='eldo-input'])[1]")
     private WebElement valueInputCity;
     @FindBy(xpath = "//div[@class='product-name']")
     private WebElement mainTitle;
+    @FindBy(xpath = "(//div[@class='buy-button sp valign-wrapper']/span)[2]")
+    private WebElement buttonBuyInStore;
+    @FindBy(xpath = "//div[@class='product-head-text']")
+    private WebElement container;
 
     public ProductPage(WebDriver driver) {
         super(driver);
+        this.header = new Header(driver);
     }
 
     public String chooseNameCityFromFieldInput() {
@@ -32,5 +37,17 @@ public class ProductPage extends BasePage {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(mainTitle));
         return mainTitle.getText().toLowerCase();
+    }
+
+    public ProductPage addProductToBasket() {
+        buttonBuyInStore.click();
+        return this;
+    }
+
+    public BasketPage goToBasket() {
+        header.getLinkBasket().click();
+        container.click();
+        header.getLinkBasket().click();
+        return new BasketPage(driver);
     }
 }
