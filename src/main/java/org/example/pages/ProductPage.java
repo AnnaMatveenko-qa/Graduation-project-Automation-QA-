@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 @Getter
 public class ProductPage extends BasePage {
@@ -21,6 +22,7 @@ public class ProductPage extends BasePage {
     private WebElement buttonBuyInStore;
     @FindBy(xpath = "//div[@class='product-head-text']")
     private WebElement container;
+
 
     public ProductPage(WebDriver driver) {
         super(driver);
@@ -41,13 +43,23 @@ public class ProductPage extends BasePage {
 
     public ProductPage addProductToBasket() {
         buttonBuyInStore.click();
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(buttonBuyInStore));
+        container.click();
         return this;
     }
 
     public BasketPage goToBasket() {
-        header.getLinkBasket().click();
-        container.click();
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(header.getLinkBasket()));
         header.getLinkBasket().click();
         return new BasketPage(driver);
     }
+
+    public MainPage returnMainPage() {
+        driver.navigate().back();
+        return new MainPage(driver);
+    }
+
+
 }

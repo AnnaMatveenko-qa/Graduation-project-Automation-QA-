@@ -63,7 +63,7 @@ public class FiltersTest extends BaseTest {
         if (index == 0) {
             Assert.assertTrue(mainPage.putCheckProductCondition(index)
                     .compareListTitleProductsTextWithProductCondition(data));
-            ProductPage productPage = mainPage.chooseProductPage(5);
+            ProductPage productPage = mainPage.chooseProductPage(0);
             Assert.assertTrue(productPage.getTitleProduct().contains(data.toLowerCase()));
         } else {
             if (index == 1) {

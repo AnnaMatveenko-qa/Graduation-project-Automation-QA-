@@ -67,6 +67,8 @@ public class MainPage extends BasePage {
     private WebElement chooseFilter;
 
     public MainPage putCheckProductCondition(Integer index) {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.elementToBeClickable(productCond));
         productCond.click();
         listProductCond.get(index).click();
         new WebDriverWait(driver, Duration.ofSeconds(5))
@@ -85,13 +87,11 @@ public class MainPage extends BasePage {
 
 
     public ProductPage chooseProductPage(Integer index) {
-        //new WebDriverWait(driver, Duration.ofSeconds(3))
-               // .until(ExpectedConditions.visibilityOf(chooseFilter));
-        new WebDriverWait(driver, Duration.ofSeconds(3))
+        new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(linksProductPages.get(index)));
         linksProductPages.get(index).isDisplayed();
         linksProductPages.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(3))
+        new WebDriverWait(driver, Duration.ofSeconds(7))
                 .until(ExpectedConditions.presenceOfElementLocated(By
                         .xpath("//div[@class='product-name']")));
         return new ProductPage(driver);
@@ -113,7 +113,7 @@ public class MainPage extends BasePage {
     }
 
     public boolean compareListTitleProductsTextWithProductCondition(String expected) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         List<String> titleProducts = new ArrayList<>();
         for (int i = 0; i < listTitleProducts.size() - 4; i++)
@@ -262,11 +262,11 @@ public class MainPage extends BasePage {
             strings.add(listTitleProducts.get(i).getText());
         }
         Collections.sort(strings);
-        System.out.println(strings);
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         return strings;
     }
+
     private List<String> sortDown() {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
@@ -275,7 +275,6 @@ public class MainPage extends BasePage {
             strings.add(listTitleProducts.get(i).getText());
         }
         Collections.reverse(strings);
-        System.out.println(strings);
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         return strings;
@@ -294,6 +293,7 @@ public class MainPage extends BasePage {
         }
         return false;
     }
+
     public boolean compareDown() {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
