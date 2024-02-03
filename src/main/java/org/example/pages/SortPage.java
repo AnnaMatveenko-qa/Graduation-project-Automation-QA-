@@ -30,7 +30,7 @@ public class SortPage extends BasePage {
         } catch (org.openqa.selenium.StaleElementReferenceException ex) {
             sortsNames.get(index).click();
         }
-        new WebDriverWait(driver, Duration.ofSeconds(30)).
+        new WebDriverWait(driver, Duration.ofSeconds(5)).
                 until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
         return this;
 
