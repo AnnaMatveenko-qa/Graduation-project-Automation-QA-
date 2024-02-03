@@ -95,7 +95,7 @@
                     <systemPropertyVariables>
                         <property>
                             <name>allure.results.directory</name>
-                            <value>${project.build.directory}/target/allure-results</value>
+                            <value>../target/allure-results</value>
                         </property>
                     </systemPropertyVariables>
                     <suiteXmlFiles>
