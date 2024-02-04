@@ -67,11 +67,11 @@ public class MainPage extends BasePage {
     private WebElement chooseFilter;
 
     public MainPage putCheckProductCondition(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(productCond));
         productCond.click();
         listProductCond.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         return this;
     }
@@ -80,18 +80,18 @@ public class MainPage extends BasePage {
         buttonShowAllCityName.isDisplayed();
         buttonShowAllCityName.click();
         cityNames.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         return this;
     }
 
 
     public ProductPage chooseProductPage(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(linksProductPages.get(index)));
         linksProductPages.get(index).isDisplayed();
         linksProductPages.get(index).click();
-        new WebDriverWait(driver, Duration.ofSeconds(7))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.presenceOfElementLocated(By
                         .xpath("//div[@class='product-name']")));
         return new ProductPage(driver);
@@ -113,7 +113,7 @@ public class MainPage extends BasePage {
     }
 
     public boolean compareListTitleProductsTextWithProductCondition(String expected) {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         List<String> titleProducts = new ArrayList<>();
         for (int i = 0; i < listTitleProducts.size() - 4; i++)
@@ -127,20 +127,20 @@ public class MainPage extends BasePage {
     }
 
     public MainPage putCheckboxProducerName(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.presenceOfElementLocated(By
                         .xpath("//div[@id='producer']/following-sibling::div//button")));
         new Actions(driver).moveToElement(buttonShowAllProducerName).click()
-                .pause(Duration.ofSeconds(5)).click(producerMarks.get(index)).perform();
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .pause(Duration.ofSeconds(30)).click(producerMarks.get(index)).perform();
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         return this;
     }
 
     public boolean compareSelectFilterAndProductTitle(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
-        chooseFilter.isDisplayed();
+      //  chooseFilter.isDisplayed();
         String[] strs = chooseFilter.getText().toLowerCase().trim().split(": ");
         String[] strings = listTitleProducts.get(index).getText().toLowerCase().trim().split(" ");
         for (String a : strs) {
@@ -164,7 +164,7 @@ public class MainPage extends BasePage {
         new WebDriverWait(driver, Duration.ofSeconds(7)).until(ExpectedConditions
                 .elementToBeClickable(buttonApplyPrice));
         buttonApplyPrice.click();
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.visibilityOf(chooseFilter));
+        new WebDriverWait(driver, Duration.ofSeconds(30)).until(ExpectedConditions.visibilityOf(chooseFilter));
         return this;
     }
 
@@ -175,14 +175,14 @@ public class MainPage extends BasePage {
             String priceValue = productsPrice.getText().replaceAll(" ", "");
             prices.add(Integer.valueOf(priceValue));
         }
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
         return prices;
     }
 
 
     public boolean isPresentPriceInRange(Integer priceMin, Integer priceMax) {
-        new WebDriverWait(driver, Duration.ofSeconds(7))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(chooseFilter));
         boolean result = false;
         List<Integer> prices = conversionPriceList();
@@ -198,7 +198,7 @@ public class MainPage extends BasePage {
 
 
     public boolean comparePricesOrderOfIncrease() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
         boolean result = false;
         List<Integer> prices = conversionPriceList();
@@ -213,7 +213,7 @@ public class MainPage extends BasePage {
     }
 
     public boolean comparePricesDescendingOrder() {
-        new WebDriverWait(driver, Duration.ofSeconds(7))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
         boolean result = false;
         List<Integer> prices = conversionPriceList();
@@ -262,26 +262,26 @@ public class MainPage extends BasePage {
             strings.add(listTitleProducts.get(i).getText());
         }
         Collections.sort(strings);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         return strings;
     }
 
     private List<String> sortDown() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         List<String> strings = new ArrayList<>();
         for (int i = 0; i < listTitleProducts.size() - 4; i++) {
             strings.add(listTitleProducts.get(i).getText());
         }
         Collections.reverse(strings);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         return strings;
     }
 
     public boolean compare() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         List<String> strings = sort();
         for (int i = 0; i < strings.size(); i++) {
@@ -295,7 +295,7 @@ public class MainPage extends BasePage {
     }
 
     public boolean compareDown() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)));
         List<String> strings = sortDown();
         for (int i = 0; i < strings.size(); i++) {

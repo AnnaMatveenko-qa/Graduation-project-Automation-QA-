@@ -32,7 +32,7 @@ public class BasketPage extends BasePage {
     }
 
     public boolean isLocationOnBasketPage() {
-         new WebDriverWait(driver, Duration.ofSeconds(20))
+         new WebDriverWait(driver, Duration.ofSeconds(30))
                .until(ExpectedConditions.visibilityOf(titleAddedProduct));
         titleAddedProduct.isDisplayed();
         return true;

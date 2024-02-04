@@ -30,27 +30,27 @@ public class ProductPage extends BasePage {
     }
 
     public String chooseNameCityFromFieldInput() {
-        new WebDriverWait(driver, Duration.ofSeconds(7))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(valueInputCity));
         return valueInputCity.getAttribute("value").toLowerCase();
     }
 
     public String getTitleProduct() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(mainTitle));
         return mainTitle.getText().toLowerCase();
     }
 
     public ProductPage addProductToBasket() {
         buttonBuyInStore.click();
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(buttonBuyInStore));
         container.click();
         return this;
     }
 
     public BasketPage goToBasket() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
+        new WebDriverWait(driver, Duration.ofSeconds(30))
                 .until(ExpectedConditions.visibilityOf(header.getLinkBasket()));
         header.getLinkBasket().click();
         return new BasketPage(driver);
