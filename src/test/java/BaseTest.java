@@ -26,7 +26,7 @@ public abstract class BaseTest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--headless");
         driver = new ChromeDriver(options);
-       driver.manage().window().setSize(new Dimension(1600,900));
+     //  driver.manage().window().setSize(new Dimension(1600,900));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
         driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
