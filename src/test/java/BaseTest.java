@@ -17,16 +17,17 @@ public abstract class BaseTest {
     protected WebDriver driver;
 
     @BeforeMethod
-    public void InitDriver() throws RuntimeException{
-        WebDriverManager.chromedriver().setup();
+    public void InitDriver() throws RuntimeException {
+        WebDriverManager.chromedriver().clearDriverCache().setup();
+        WebDriverManager.chromedriver().clearResolutionCache().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
         options.addArguments("--remote-debugging-pipe");
-      //  options.addArguments("--windows-size=1920,1080");
+        //  options.addArguments("--windows-size=1920,1080");
         options.addArguments("--disable-dev-shm-usage");
-       options.addArguments("--headless");
-        driver = new ChromeDriver(options);
-      // driver.manage().window().setSize(new Dimension(1600,900));
+        options.addArguments("--headless");
+         driver = new ChromeDriver(options);
+       // driver.manage().window().setSize(new Dimension(1600, 900));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
         driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
@@ -37,7 +38,7 @@ public abstract class BaseTest {
     @AfterMethod
     public void TearDown() throws RuntimeException {
         driver.quit();
-       WebDriverManager.chromedriver().quit();
+        WebDriverManager.chromedriver().quit();
     }
 
 }
