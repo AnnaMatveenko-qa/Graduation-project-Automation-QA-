@@ -18,7 +18,7 @@ public abstract class BaseTest {
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException{
-        WebDriverManager.chromedriver().setup();
+      //  WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
         options.addArguments("--remote-debugging-pipe");
@@ -37,7 +37,7 @@ public abstract class BaseTest {
     @AfterMethod
     public void TearDown() throws RuntimeException {
         driver.quit();
-        WebDriverManager.chromedriver().quit();
+      //  WebDriverManager.chromedriver().quit();
     }
 
 }
