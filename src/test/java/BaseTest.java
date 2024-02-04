@@ -14,7 +14,7 @@ import java.time.Duration;
 
 public abstract class BaseTest {
     protected WebDriver driver;
-    @BeforeSuite
+   @BeforeSuite
     static void setupClass() {
         WebDriverManager.chromedriver().setup();
     }
@@ -22,10 +22,9 @@ public abstract class BaseTest {
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException{
-       ChromeOptions options = new ChromeOptions();
+      ChromeOptions options = new ChromeOptions();
         options.addArguments("--no-sandbox");
         options.addArguments("--remote-debugging-pipe");
-        options.addArguments("--headless");
         options.addArguments("--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
        // driver.manage().window().maximize();
