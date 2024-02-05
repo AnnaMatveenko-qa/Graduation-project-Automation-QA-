@@ -14,11 +14,11 @@ import java.time.Duration;
 public abstract class BaseTest {
     protected WebDriver driver;
 
-   /* @BeforeSuite
+    @BeforeSuite
     public void setupClass() {
         WebDriverManager.chromedriver().clearDriverCache().setup();
         WebDriverManager.chromedriver().clearResolutionCache().setup();
-    }*/
+    }
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException {
@@ -44,8 +44,8 @@ public abstract class BaseTest {
 
     }
 
-/*    @AfterSuite
+   @AfterSuite
     public void tearDownClass() {
         WebDriverManager.chromedriver().quit();
-    }*/
+    }
 }
