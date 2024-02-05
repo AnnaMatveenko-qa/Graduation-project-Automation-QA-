@@ -22,12 +22,12 @@ public abstract class BaseTest {
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException {
-       ChromeOptions options = new ChromeOptions();
-       // options.addArguments("--no-sandbox");
-       // options.addArguments("--remote-debugging-pipe");
-      // options.addArguments("--windows-size=1920,1080");
-       // options.addArguments("--disable-dev-shm-usage");
-       // options.addArguments("--headless=new");
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--remote-debugging-pipe");
+        options.addArguments("--windows-size=1920,1080");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless=new");
         options.addArguments("--single-process");
 
         driver = new ChromeDriver(options);
@@ -45,7 +45,7 @@ public abstract class BaseTest {
 
     }
 
-   @AfterSuite
+    @AfterSuite
     public void tearDownClass() {
         WebDriverManager.chromedriver().quit();
     }
