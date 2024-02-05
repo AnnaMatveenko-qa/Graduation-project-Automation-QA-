@@ -24,9 +24,9 @@ public abstract class BaseTest {
     public void InitDriver() throws RuntimeException {
         ChromeOptions options = new ChromeOptions();
         //options.addArguments("--no-sandbox");
-       options.addArguments("--remote-debugging-pipe");
+      // options.addArguments("--remote-debugging-pipe");
         //  options.addArguments("--windows-size=1920,1080");
-        //options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--disable-dev-shm-usage");
        // options.addArguments("--headless");
         driver = new ChromeDriver(options);
         driver.manage().window().setSize(new Dimension(1600, 900));
