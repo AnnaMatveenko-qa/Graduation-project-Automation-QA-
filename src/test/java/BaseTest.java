@@ -15,7 +15,7 @@ public abstract class BaseTest {
     protected WebDriver driver;
 
     @BeforeSuite
-    public static void setupClass() {
+    public  void setupClass() {
         WebDriverManager.chromedriver().clearDriverCache().setup();
         WebDriverManager.chromedriver().clearResolutionCache().setup();
     }
@@ -46,8 +46,8 @@ public abstract class BaseTest {
 
     }
 
-    @AfterSuite
+  /*  @AfterSuite
     public void tearDownClass() {
         WebDriverManager.chromedriver().quit();
-    }
+    }*/
 }
