@@ -16,8 +16,8 @@ public abstract class BaseTest {
 
     @BeforeSuite
     public  void setupClass() {
-        WebDriverManager.chromedriver().clearDriverCache().setup();
-        WebDriverManager.chromedriver().clearResolutionCache().setup();
+        WebDriverManager.chromedriver().setup();
+      //  WebDriverManager.chromedriver().clearResolutionCache().setup();
     }
 
     @BeforeMethod
@@ -46,8 +46,8 @@ public abstract class BaseTest {
 
     }
 
-  /*  @AfterSuite
+   @AfterSuite
     public void tearDownClass() {
         WebDriverManager.chromedriver().quit();
-    }*/
+    }
 }
