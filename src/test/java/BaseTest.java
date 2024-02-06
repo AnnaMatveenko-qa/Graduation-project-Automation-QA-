@@ -6,7 +6,7 @@ import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
 import org.testng.annotations.*;
 import org.openqa.selenium.chrome.ChromeOptions;
-
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 import java.time.Duration;
 
@@ -14,22 +14,22 @@ import java.time.Duration;
 public abstract class BaseTest {
     protected WebDriver driver;
 
-   /* @BeforeSuite
+    @BeforeSuite
     public  void setupClass() {
-        WebDriverManager.chromedriver().setup();
-      //  WebDriverManager.chromedriver().clearResolutionCache().setup();
-    }*/
+        WebDriverManager.chromedriver().clearDriverCache().setup();
+        WebDriverManager.chromedriver().clearResolutionCache().setup();
+    }
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException {
         ChromeOptions options = new ChromeOptions();
 
-       options.addArguments("--no-sandbox");
-        options.addArguments("--remote-debugging-pipe");
-        options.addArguments("--windows-size=1920,1080");
-        options.addArguments("--disable-dev-shm-usage");
-        //options.addArguments("--headless=new");
-        options.addArguments("--single-process");
+       //options.addArguments("--no-sandbox");
+       // options.addArguments("--remote-debugging-pipe");
+       // options.addArguments("--windows-size=1920,1080");
+        //options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless=new");
+      //  options.addArguments("--single-process");
 
         driver = new ChromeDriver(options);
        driver.manage().window().setSize(new Dimension(1600, 900));
@@ -46,8 +46,8 @@ public abstract class BaseTest {
 
     }
 
- /*  @AfterSuite
+   @AfterSuite
     public void tearDownClass() {
         WebDriverManager.chromedriver().quit();
-    }*/
+    }
 }
