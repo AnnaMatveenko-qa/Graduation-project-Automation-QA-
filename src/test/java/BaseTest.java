@@ -34,7 +34,7 @@ public abstract class BaseTest {
         driver = new ChromeDriver(options);
        driver.manage().window().setSize(new Dimension(1600, 900));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(240));
         driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
 
 
