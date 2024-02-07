@@ -22,8 +22,7 @@ public abstract class BaseTest {
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException {
-
-
+        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
         this.driver = new ChromeDriver();
         driver.manage().window().setSize(new Dimension(1600, 900));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
