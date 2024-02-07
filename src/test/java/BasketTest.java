@@ -13,7 +13,7 @@ public class BasketTest extends BaseTest{
         ProductPage productPage = mainPage.chooseProductPage(3);
         String expected = productPage.getTitleProduct();
         BasketPage basketPage = productPage.addProductToBasket().goToBasket();
-        Assert.assertEquals(basketPage.getTitleAddedProduct().getText().toLowerCase(), expected);
+        Assert.assertEquals(basketPage.getActualFromTitleAddedProduct(), expected);
 
     }
     @Test

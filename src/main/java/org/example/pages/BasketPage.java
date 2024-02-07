@@ -13,7 +13,7 @@ import java.util.List;
 
 @Getter
 public class BasketPage extends BasePage {
-    private Header header;
+
     @FindBy(xpath = "//div[@class='title']/a")
     private WebElement titleAddedProduct;
     @FindBy(xpath = "//div[@class='icon-trash']")
@@ -22,19 +22,21 @@ public class BasketPage extends BasePage {
 
     public BasketPage(WebDriver driver) {
         super(driver);
-        this.header = new Header(driver);
-
     }
 
     public BasketPage deleteProductFromBasket(Integer index) {
-        new Actions(driver).moveToElement(deleteProduct.get(index)).click();
+        new Actions(driver).moveToElement(deleteProduct.get(index)).click().build().perform();
         return new BasketPage(driver);
     }
 
     public boolean isLocationOnBasketPage() {
-         new WebDriverWait(driver, Duration.ofSeconds(30))
-               .until(ExpectedConditions.visibilityOf(titleAddedProduct));
+        new WebDriverWait(driver, Duration.ofSeconds(30))
+                .until(ExpectedConditions.visibilityOf(titleAddedProduct));
         titleAddedProduct.isDisplayed();
         return true;
+    }
+
+    public String getActualFromTitleAddedProduct() {
+        return titleAddedProduct.getText().toLowerCase();
     }
 }

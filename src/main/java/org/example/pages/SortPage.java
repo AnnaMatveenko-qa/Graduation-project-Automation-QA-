@@ -28,11 +28,10 @@ public class SortPage extends BasePage {
         try {
             sortsNames.get(index).click();
         } catch (org.openqa.selenium.StaleElementReferenceException ex) {
-            sortsNames.get(index).click();
+            driver.navigate().refresh();
+            chooseSortName(index);
         }
-        new WebDriverWait(driver, Duration.ofSeconds(5)).
-                until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
-        return this;
+       return this;
 
     }
 

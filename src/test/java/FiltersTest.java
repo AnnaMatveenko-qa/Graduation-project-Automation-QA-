@@ -50,11 +50,10 @@ public class FiltersTest extends BaseTest {
     @Test
     public void filterAvailabilityCity() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putCheckboxCityName(10);
-        String chooseCity = mainPage.getChooseFilter().getText().toLowerCase();
+        String chooseCity = mainPage.putCheckboxCityName(10).getTextFromCityNames(10);
         ProductPage productPage = mainPage.chooseProductPage(0);
         String city = productPage.chooseNameCityFromFieldInput();
-        Assert.assertTrue(chooseCity.contains(city));
+        Assert.assertEquals(chooseCity, city);
     }
 
     @Test(dataProvider = "Product condition")
@@ -79,8 +78,7 @@ public class FiltersTest extends BaseTest {
     @Test
     public void filterProducer() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.putCheckboxProducerName(3);
-        Assert.assertTrue(mainPage.compareSelectFilterAndProductTitle(12));
+        Assert.assertTrue(mainPage.putCheckboxProducerName(3).compareSelectFilterAndProductTitle(12));
     }
 
     @Test(dataProvider = "Price")
@@ -92,14 +90,6 @@ public class FiltersTest extends BaseTest {
                 .isPresentPriceInRange(priceValueMin, priceValueMax));
     }
 
- /*  @Test(dataProvider = "Price")
-    public void filterPriceBySlider(String priceMin, String priceMax) {
-        MainPage mainPage = new MainPage(driver);
-        int priceValueMin = valueOf(priceMin.replaceAll(" ", ""));
-        int priceValueMax = valueOf(priceMax.replaceAll(" ", ""));
-        Assert.assertTrue(mainPage.moveSlider(priceValueMin, priceValueMax).isPresentPriceInRange(priceValueMin, priceValueMax ));
-
-    }*/
 
 
 }
