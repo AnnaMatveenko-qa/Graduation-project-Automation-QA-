@@ -44,7 +44,8 @@ public class MainPage extends BasePage {
     private List<WebElement> listProductCond;
     @FindBy(xpath = "//div[@name='allPromoGoods']//h1")
     private WebElement productsHeader;
-    @FindBy(xpath = "//div[contains(@class,'TileBlockstyled__StyledTileBlockB')]//span")
+    @FindBy(xpath = "//div[@id='tileBlock']/div[contains(@class,'TileBlockstyled')]" +
+            "//span[contains(@class,'GoodsDescriptionstyled')]")
     private List<WebElement> listTitleProducts;
     @FindBy(xpath = "//div[@id='tileBlock']/div[contains(@class,'TileBlockstyled__StyledTileBlockHeader')]/a")
     private List<WebElement> linksProductPages;
@@ -60,10 +61,6 @@ public class MainPage extends BasePage {
     private WebElement priceInputNumberRangeMin;
     @FindBy(xpath = "//input[@id='price-input-number-range-max']")
     private WebElement priceInputNumberRangeMax;
-    @FindBy(xpath = "//input[@id='input-range-*min']")
-    private WebElement rangeMinBySlider;
-    @FindBy(xpath = "//input[@id='input-range-max']")
-    private WebElement rangeMaxBySlider;
     @FindBy(xpath = "//div[@id='price']//button[contains(@class,'ui-library-action')]")
     private WebElement buttonApplyPrice;
     @FindBy(xpath = " //div[@name='catalog-top']//div[@id='tileBlockFooter']//span[contains(@class,'ui-library-subtitle1Bold')]")
