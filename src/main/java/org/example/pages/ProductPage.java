@@ -32,15 +32,17 @@ public class ProductPage extends BasePage {
         this.popUpProduct = new PopUpProduct(driver);
     }
 
-    public String chooseNameCityFromFieldInput() {
+    public String getCityNameFromFieldInput() {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.visibilityOf(valueInputCity));
         new Actions(driver).moveToElement(valueInputCity).build().perform();
         return valueInputCity.getAttribute("value").toLowerCase();
     }
-
     public String getTitleProduct() {
         try {
-            mainTitle.isDisplayed();
+           if (mainTitle.isDisplayed()){
             return mainTitle.getText().toLowerCase();
+           }
         } catch (NoSuchElementException e) {
             driver.navigate().refresh();
         }

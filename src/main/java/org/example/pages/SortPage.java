@@ -2,6 +2,7 @@ package org.example.pages;
 
 
 import lombok.Getter;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -25,16 +26,19 @@ public class SortPage extends BasePage {
     }
 
     public SortPage chooseSortName(Integer index) {
-        try {
-            sortsNames.get(index).click();
-        } catch (org.openqa.selenium.StaleElementReferenceException ex) {
-            driver.navigate().refresh();
-            chooseSortName(index);
+        boolean isClicked = false;
+        while (!isClicked) {
+            try {
+                WebElement sortElement = new WebDriverWait(driver, Duration.ofSeconds(10))
+                        .until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
+                sortElement.click();
+                isClicked = true;
+            } catch (StaleElementReferenceException e) {
+                driver.navigate().refresh();
+            }
         }
-       return this;
+        return this;
 
     }
-
-
 
 }

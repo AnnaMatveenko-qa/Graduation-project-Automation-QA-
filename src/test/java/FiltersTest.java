@@ -27,8 +27,8 @@ public class FiltersTest extends BaseTest {
     @DataProvider(name = "Price")
     public Object[][] checkPrice() {
         return new Object[][]{
-                {"15 000", "75 000"}
-
+                {"15 000", "75 000"},
+                {"25 000", "35 000"}
         };
     }
 
@@ -50,10 +50,10 @@ public class FiltersTest extends BaseTest {
     @Test
     public void filterAvailabilityCity() {
         MainPage mainPage = new MainPage(driver);
-        String chooseCity = mainPage.putCheckboxCityName(10).getTextFromCityNames(10);
+        String selectedCity = mainPage.selectCityFilter(10).getSelectedCityName();
         ProductPage productPage = mainPage.chooseProductPage(0);
-        String city = productPage.chooseNameCityFromFieldInput();
-        Assert.assertEquals(chooseCity, city);
+        String cityNameOnProductPage = productPage.getCityNameFromFieldInput();
+        Assert.assertEquals(selectedCity, cityNameOnProductPage);
     }
 
     @Test(dataProvider = "Product condition")
@@ -62,16 +62,16 @@ public class FiltersTest extends BaseTest {
         if (index == 0) {
             Assert.assertTrue(mainPage.putCheckProductCondition(index)
                     .compareListTitleProductsTextWithProductCondition(data));
-            ProductPage productPage = mainPage.chooseProductPage(0);
-            Assert.assertTrue(productPage.getTitleProduct().contains(data.toLowerCase()));
+            Assert.assertTrue(mainPage.chooseProductPage(0).getTitleProduct().contains(data.toLowerCase()));
         } else {
             if (index == 1) {
                 Assert.assertFalse(mainPage.putCheckProductCondition(index)
                         .compareListTitleProductsTextWithProductCondition(data));
                 ProductPage productPage = mainPage.chooseProductPage(5);
                 Assert.assertFalse(productPage.getTitleProduct().contains(data.toLowerCase()));
-            } else Assert.fail("This product condition isn`t");
-
+            } else {
+                Assert.fail("This product condition isn't");
+            }
         }
     }
 

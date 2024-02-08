@@ -23,14 +23,14 @@ public class SortingTest extends BaseTest {
     @Test
     public void sortBeNameUp() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.getSortPage().chooseSortName(2);
+        mainPage.chooseSortAndRetrieveTitles(2);
         Assert.assertTrue(mainPage.comparisonProductHeaderSorting());
     }
 
     @Test
     public void sortBeNameDown() {
         MainPage mainPage = new MainPage(driver);
-        mainPage.getSortPage().chooseSortName(2).chooseSortName(2);
+        mainPage.chooseSortAndRetrieveTitlesInReverseOrder(2);
         Assert.assertTrue(mainPage.comparisonReverseSortingProductTitles());
     }
 }
