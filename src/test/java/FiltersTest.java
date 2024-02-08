@@ -33,7 +33,7 @@ public class FiltersTest extends BaseTest {
     }
 
 
-    @Test
+    @Test(invocationCount = NUMBER_OF_STARTS)
     public void checkTitleFilters() {
         List<String> data = new ArrayList<>();
         data.add("Наявність в місті");
@@ -47,7 +47,7 @@ public class FiltersTest extends BaseTest {
 
     }
 
-    @Test
+    @Test(invocationCount = NUMBER_OF_STARTS)
     public void filterAvailabilityCity() {
         MainPage mainPage = new MainPage(driver);
         String selectedCity = mainPage.selectCityFilter(10).getSelectedCityName();
@@ -56,7 +56,7 @@ public class FiltersTest extends BaseTest {
         Assert.assertEquals(selectedCity, cityNameOnProductPage);
     }
 
-    @Test(dataProvider = "Product condition")
+    @Test(dataProvider = "Product condition",invocationCount = NUMBER_OF_STARTS)
     public void filterProductCondition(String data, Integer index) {
         MainPage mainPage = new MainPage(driver);
         if (index == 0) {
@@ -75,13 +75,13 @@ public class FiltersTest extends BaseTest {
         }
     }
 
-    @Test
+    @Test(invocationCount = NUMBER_OF_STARTS)
     public void filterProducer() {
         MainPage mainPage = new MainPage(driver);
         Assert.assertTrue(mainPage.putCheckboxProducerName(3).compareSelectFilterAndProductTitle(12));
     }
 
-    @Test(dataProvider = "Price")
+    @Test(dataProvider = "Price",invocationCount = NUMBER_OF_STARTS)
     public void filterPriceByNumber(String priceMin, String priceMax) {
         MainPage mainPage = new MainPage(driver);
         int priceValueMin = valueOf(priceMin.replaceAll(" ", ""));

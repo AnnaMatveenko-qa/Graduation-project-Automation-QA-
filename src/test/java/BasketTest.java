@@ -7,7 +7,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class BasketTest extends BaseTest{
-    @Test
+    @Test(invocationCount = NUMBER_OF_STARTS)
     public void addProductToBasket() {
         MainPage mainPage = new MainPage(driver);
         ProductPage productPage = mainPage.chooseProductPage(3);
@@ -16,7 +16,7 @@ public class BasketTest extends BaseTest{
         Assert.assertEquals(basketPage.getActualFromTitleAddedProduct(), expected);
 
     }
-    @Test
+    @Test(invocationCount = NUMBER_OF_STARTS)
     public void deleteProductFromBasket() {
         MainPage mainPage = new MainPage(driver);
             ProductPage productPage = mainPage.chooseProductPage(3);
