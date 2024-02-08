@@ -245,7 +245,7 @@ public class MainPage extends BasePage {
         List<String> titles = new ArrayList<>();
         for (int i = 0; i < listTitleProducts.size() - 4; i++) {
             String title = listTitleProducts.get(i).getText();
-         String titleWithoutWord = title.replace("УЦІНКА!", "").trim();
+            String titleWithoutWord = title.replace("УЦІНКА!", "").trim();
             titles.add(titleWithoutWord);
         }
         return titles;
@@ -264,9 +264,6 @@ public class MainPage extends BasePage {
                 ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
         List<String> sortedTitles = sort();
         List<String> visibleTitles = getVisibleProductTitles();
-        for (int i = 0; i < sortedTitles.size(); i++) {
-            System.out.println("Sorted title: " + sortedTitles.get(i) + ", Visible title: " + visibleTitles.get(i));
-        }
         return sortedTitles.equals(visibleTitles);
     }
 
@@ -291,9 +288,6 @@ public class MainPage extends BasePage {
                 ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
         List<String> strings = sortReverse();
         List<String> actualTitles = getVisibleProductTitles();
-        for (int i = 0; i < strings.size(); i++) {
-            System.out.println("Sorted title: " + strings.get(i) + ", Visible title: " + actualTitles.get(i));
-        }
         return actualTitles.equals(strings);
     }
 
