@@ -146,21 +146,24 @@ public class MainPage extends BasePage {
     }
 
     public boolean compareListTitleProductsTextWithProductCondition(String expected, int attempt) {
+        boolean result = false;
         try {
             new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions.and(
                             ExpectedConditions.visibilityOf(choosedFilter),
                             ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
             List<String> titleProducts = new ArrayList<>();
-            for (WebElement titleProduct : listTitleProducts) {
+            for (WebElement titleProduct : listTitleProducts.subList(0,listTitleProducts.size()-4)) {
                 titleProducts.add(titleProduct.getText());
             }
             for (String title : titleProducts) {
                 if (title.toLowerCase().contains(expected.toLowerCase())) {
-                    return true;
+                    result = true;
+                }else {
+                   return false;
                 }
             }
-            return false;
+            return result;
         } catch (StaleElementReferenceException e) {
             if (attempt < 3) {
                 driver.navigate().refresh();
@@ -170,7 +173,6 @@ public class MainPage extends BasePage {
             }
         }
     }
-
     public MainPage putCheckboxProducerName(Integer index) {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.presenceOfElementLocated(By
@@ -209,15 +211,20 @@ public class MainPage extends BasePage {
 
 
     public MainPage putMinMaxValueOfPrice(String priceMin, String priceMax) {
-        priceInputNumberRangeMax.click();
-        priceInputNumberRangeMax.clear();
-        new Actions(driver).pause(Duration.ofSeconds(2)).sendKeys(priceInputNumberRangeMax, priceMax).build().perform();
-        priceInputNumberRangeMin.click();
-        priceInputNumberRangeMin.clear();
-        new Actions(driver).sendKeys(priceInputNumberRangeMin, priceMin).scrollToElement(titleFilters.get(5)).build().perform();
-        buttonApplyPrice.click();
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.and(
+        try {
+            priceInputNumberRangeMax.click();
+            priceInputNumberRangeMax.clear();
+            new Actions(driver).pause(Duration.ofSeconds(2)).sendKeys(priceInputNumberRangeMax, priceMax).build().perform();
+            priceInputNumberRangeMin.click();
+            priceInputNumberRangeMin.clear();
+            new Actions(driver).sendKeys(priceInputNumberRangeMin, priceMin).scrollToElement(titleFilters.get(5)).build().perform();
+            buttonApplyPrice.click();
+        } catch (
+                ElementClickInterceptedException e) {
+            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonApplyPrice);
+            buttonApplyPrice.click();
+        }
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.and(
                         ExpectedConditions.visibilityOf(choosedFilter),
                         ExpectedConditions.visibilityOfAllElements(productsPrices)));
         return this;
@@ -237,13 +244,16 @@ public class MainPage extends BasePage {
     }
 
     public boolean isPresentPriceInRange(Integer priceMin, Integer priceMax) {
+        boolean result = false;
         List<Integer> prices = conversionPriceList();
         for (Integer price : prices) {
             if (priceMin <= price && price <= priceMax) {
-                return true;
+                result = true;
+            }else {
+                return false;
             }
         }
-        return false;
+        return result;
     }
 
     public boolean comparePricesOrderOfIncrease() {
@@ -262,13 +272,12 @@ public class MainPage extends BasePage {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
         List<Integer> prices = conversionPriceList();
-        boolean result = true;
         for (int i = 0; i < prices.size() - 1; i++) {
             if (prices.get(i) < prices.get(i + 1)) {
                 return false;
             }
         }
-        return result;
+        return true;
     }
 
     private List<String> getVisibleProductTitles() {
@@ -308,7 +317,7 @@ public class MainPage extends BasePage {
 
     private List<String> sortReverse() {
         List<String> strings = getVisibleProductTitles();
-        Collections.sort(strings, Collections.reverseOrder());
+        strings.sort(Collections.reverseOrder());
         return strings;
     }
 
