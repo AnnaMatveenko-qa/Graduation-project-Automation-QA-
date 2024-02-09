@@ -56,17 +56,18 @@ public class FiltersTest extends BaseTest {
         Assert.assertEquals(selectedCity, cityNameOnProductPage);
     }
 
-    @Test(dataProvider = "Product condition",invocationCount = NUMBER_OF_STARTS)
+    @Test(dataProvider = "Product condition",invocationCount = 10)//NUMBER_OF_STARTS)
     public void filterProductCondition(String data, Integer index) {
         MainPage mainPage = new MainPage(driver);
         if (index == 0) {
             Assert.assertTrue(mainPage.putCheckProductCondition(index)
-                    .compareListTitleProductsTextWithProductCondition(data));
+                    .compareListTitleProductsTextWithProductCondition(data,0));
             Assert.assertTrue(mainPage.chooseProductPage(0).getTitleProduct().contains(data.toLowerCase()));
         } else {
             if (index == 1) {
+                mainPage=new MainPage(driver);
                 Assert.assertFalse(mainPage.putCheckProductCondition(index)
-                        .compareListTitleProductsTextWithProductCondition(data));
+                        .compareListTitleProductsTextWithProductCondition(data,0));
                 ProductPage productPage = mainPage.chooseProductPage(5);
                 Assert.assertFalse(productPage.getTitleProduct().contains(data.toLowerCase()));
             } else {

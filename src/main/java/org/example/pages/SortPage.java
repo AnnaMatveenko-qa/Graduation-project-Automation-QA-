@@ -29,11 +29,13 @@ public class SortPage extends BasePage {
         boolean isClicked = false;
         while (!isClicked) {
             try {
-                WebElement sortElement = new WebDriverWait(driver, Duration.ofSeconds(10))
-                        .until(ExpectedConditions.elementToBeClickable(sortsNames.get(index)));
-                sortElement.click();
-                isClicked = true;
-            } catch (StaleElementReferenceException e) {
+                if (sortsNames.get(index).isEnabled()) {
+                    sortsNames.get(index).click();
+                    isClicked = true;
+                    } else {
+                      driver.navigate().refresh();
+                    }
+                 } catch (StaleElementReferenceException e) {
                 driver.navigate().refresh();
             }
         }

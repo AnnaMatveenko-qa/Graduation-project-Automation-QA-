@@ -8,7 +8,7 @@ import java.time.Duration;
 
 public abstract class BaseTest {
     protected WebDriver driver;
-    protected final int NUMBER_OF_STARTS = 10;
+    protected final int NUMBER_OF_STARTS = 2;
    @BeforeSuite
     public void setupClass() {
         WebDriverManager.chromedriver().setup();

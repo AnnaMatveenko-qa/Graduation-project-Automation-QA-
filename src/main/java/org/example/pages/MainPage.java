@@ -123,6 +123,7 @@ public class MainPage extends BasePage {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='product-name']/h1")));
         return new ProductPage(driver);
+
     }
 
     public MainPage putCheckProductCondition(Integer index) {
@@ -130,25 +131,46 @@ public class MainPage extends BasePage {
         if (index == 1) {
             new Actions(driver).moveToElement(producerMarks.get(1)).build().perform();
         }
-        listProductCond.get(index).click();
+        try {
+            listProductCond.get(index).isDisplayed();
+            listProductCond.get(index).click();
+        } catch (StaleElementReferenceException e) {
+            driver.navigate().refresh();
+            productCond.click();
+            if (index == 1) {
+                new Actions(driver).moveToElement(producerMarks.get(1)).build().perform();
+            }
+            listProductCond.get(index).click();
+        }
         return this;
-
     }
 
-    public boolean compareListTitleProductsTextWithProductCondition(String expected) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.and(
-                        ExpectedConditions.visibilityOf(choosedFilter),
-                        ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-        List<String> titleProducts = new ArrayList<>();
-        for (int i = 0; i < listTitleProducts.size() - 4; i++)
-            titleProducts.add(listTitleProducts.get(i).getText());
-        for (int i = 0; i < titleProducts.size(); i++) {
-            if (titleProducts.get(i).toLowerCase().contains(expected.toLowerCase())) {
-                return true;
+    public boolean compareListTitleProductsTextWithProductCondition(String expected, int attempt) {
+        try {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.and(
+                            ExpectedConditions.visibilityOf(choosedFilter),
+                            ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
+
+            List<String> titleProducts = new ArrayList<>();
+            for (WebElement titleProduct : listTitleProducts) {
+                titleProducts.add(titleProduct.getText());
+            }
+
+            for (String title : titleProducts) {
+                if (title.toLowerCase().contains(expected.toLowerCase())) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (StaleElementReferenceException e) {
+            if (attempt < 3) {
+                driver.navigate().refresh();
+                return compareListTitleProductsTextWithProductCondition(expected, attempt + 1);
+            } else {
+                return false;
             }
         }
-        return false;
     }
 
     public MainPage putCheckboxProducerName(Integer index) {
