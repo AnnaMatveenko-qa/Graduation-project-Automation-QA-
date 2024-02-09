@@ -50,25 +50,33 @@ public class ProductPage extends BasePage {
     }
 
     public ProductPage addProductToBasket() {
-        new WebDriverWait(driver, Duration.ofSeconds(30))
+        new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(buttonBuyInStore));
         buttonBuyInStore.isDisplayed();
         buttonBuyInStore.click();
-        container.click();
+        popUpProduct.closePopUp();
         return this;
     }
 
     public BasketPage goToBasket() {
-        try {
-            header.getLinkBasket().click();
-            container.click();
-            new WebDriverWait(driver, Duration.ofSeconds(30))
-                    .until(ExpectedConditions.elementToBeClickable(header.getLinkBasket()));
-            header.getLinkBasket().click();
-        } catch (StaleElementReferenceException e) {
-            driver.navigate().refresh();
+        int attempts = 0;
+        int maxAttempts = 3;
+        while (attempts < maxAttempts) {
+            try {
+                header.getLinkBasket().click();
+                return new BasketPage(driver);
+            } catch (StaleElementReferenceException e) {
+                if (attempts < maxAttempts - 1) {
+                    driver.navigate().refresh();
+                } else {
+                    System.out.println("Не удалось перейти в корзину после нескольких попыток");
+                }
+            } catch (NoSuchElementException | TimeoutException e) {
+                System.out.println("Не удалось перейти в корзину: " + e.getMessage());
+            }
+            attempts++;
         }
-        return new BasketPage(driver);
+        return null;
     }
         public MainPage returnMainPage () {
             driver.navigate().back();

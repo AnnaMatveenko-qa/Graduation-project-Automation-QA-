@@ -151,12 +151,10 @@ public class MainPage extends BasePage {
                     .until(ExpectedConditions.and(
                             ExpectedConditions.visibilityOf(choosedFilter),
                             ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-
             List<String> titleProducts = new ArrayList<>();
             for (WebElement titleProduct : listTitleProducts) {
                 titleProducts.add(titleProduct.getText());
             }
-
             for (String title : titleProducts) {
                 if (title.toLowerCase().contains(expected.toLowerCase())) {
                     return true;
@@ -183,18 +181,28 @@ public class MainPage extends BasePage {
     }
 
     public boolean compareSelectFilterAndProductTitle(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.and(
-                        ExpectedConditions.visibilityOf(choosedFilter),
-                        ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-        String[] selectedFilterOptions = choosedFilter.getText().toLowerCase().trim().split(": ");
-        String[] productTitleWords = listTitleProducts.get(index).getText().toLowerCase().trim().split(" ");
-        for (String selectedOption : selectedFilterOptions) {
-            for (String productWord : productTitleWords) {
-                if (Objects.equals(selectedOption, productWord)) {
-                    return true;
+        int refreshAttempts = 0;
+        while (refreshAttempts < 3) {
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.and(
+                            ExpectedConditions.visibilityOf(choosedFilter),
+                            ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
+            if (index < 0 || index >= listTitleProducts.size()) {
+                driver.navigate().refresh();
+                putCheckboxProducerName(index);
+                refreshAttempts++;
+                continue;
+            }
+            String[] selectedFilterOptions = choosedFilter.getText().toLowerCase().trim().split(": ");
+            String[] productTitleWords = listTitleProducts.get(index).getText().toLowerCase().trim().split(" ");
+            for (String selectedOption : selectedFilterOptions) {
+                for (String productWord : productTitleWords) {
+                    if (Objects.equals(selectedOption, productWord)) {
+                        return true;
+                    }
                 }
             }
+            return false;
         }
         return false;
     }

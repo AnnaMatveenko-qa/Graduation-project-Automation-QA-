@@ -76,7 +76,7 @@ public class FiltersTest extends BaseTest {
         }
     }
 
-    @Test(invocationCount = NUMBER_OF_STARTS)
+    @Test(invocationCount = 10)//NUMBER_OF_STARTS)
     public void filterProducer() {
         MainPage mainPage = new MainPage(driver);
         Assert.assertTrue(mainPage.putCheckboxProducerName(3).compareSelectFilterAndProductTitle(12));
