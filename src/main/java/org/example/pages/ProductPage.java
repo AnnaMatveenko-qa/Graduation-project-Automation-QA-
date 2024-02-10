@@ -14,6 +14,7 @@ import java.util.List;
 public class ProductPage extends BasePage {
     private Header header;
     private PopUpProduct popUpProduct;
+    private PopUpProductInCart popUpProductInCart;
     @FindBy(className = "product-view-specifications")
     private WebElement buttonProductViewSpecifications;
     @FindBy(xpath = "//div[@class='product-delivery-title']//input[@class='eldo-input']")
@@ -30,6 +31,7 @@ public class ProductPage extends BasePage {
         super(driver);
         this.header = new Header(driver);
         this.popUpProduct = new PopUpProduct(driver);
+        this.popUpProductInCart = new PopUpProductInCart(driver);
     }
 
     public String getCityNameFromFieldInput() {
