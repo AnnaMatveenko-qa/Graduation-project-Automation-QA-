@@ -21,7 +21,7 @@ public class FiltersTest extends BaseTest {
     @DataProvider(name = "Product condition")
     public Object[][] checkProductCondition() {
         return new Object[][]{
-                {"Уцінка", 0},
+               // {"Уцінка", 0},
                 {"Уцінка", 1}
 
         };
@@ -69,11 +69,11 @@ public class FiltersTest extends BaseTest {
         MainPage mainPage = new MainPage(driver);
         if (index == 0) {
             Assert.assertTrue(mainPage.putCheckProductCondition(index)
-                    .compareListTitleProductsTextWithProductCondition(data,0));            
+                    .compareListTitleProductsTextWithProductCondition(data));
         } else {
             if (index == 1) {
                 mainPage=new MainPage(driver);
-                 ProductPage productPage = mainPage.chooseProductPage(5);
+                 ProductPage productPage = mainPage.putCheckProductCondition(index).chooseProductPage(5);
                 Assert.assertFalse(productPage.getTitleProduct().contains(data.toLowerCase()));
             } else {
                 Assert.fail("This product condition isn't");

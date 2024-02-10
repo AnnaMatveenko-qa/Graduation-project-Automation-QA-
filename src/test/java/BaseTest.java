@@ -29,6 +29,7 @@ public abstract class BaseTest {
 
     @AfterMethod
     public void TearDown() throws RuntimeException {
+        driver.manage().deleteAllCookies();
         this.driver.quit();
 
     }

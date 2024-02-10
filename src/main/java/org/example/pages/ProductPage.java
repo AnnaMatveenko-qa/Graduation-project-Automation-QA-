@@ -38,15 +38,11 @@ public class ProductPage extends BasePage {
         new Actions(driver).moveToElement(valueInputCity).build().perform();
         return valueInputCity.getAttribute("value").toLowerCase();
     }
+
     public String getTitleProduct() {
-        try {
-           if (mainTitle.isDisplayed()){
-            return mainTitle.getText().toLowerCase();
-           }
-        } catch (NoSuchElementException e) {
-            driver.navigate().refresh();
-        }
+        mainTitle.isDisplayed();
         return mainTitle.getText().toLowerCase();
+
     }
 
     public ProductPage addProductToBasket() {
@@ -59,29 +55,14 @@ public class ProductPage extends BasePage {
     }
 
     public BasketPage goToBasket() {
-        int attempts = 0;
-        int maxAttempts = 3;
-        while (attempts < maxAttempts) {
-            try {
-                header.getLinkBasket().click();
-                return new BasketPage(driver);
-            } catch (StaleElementReferenceException e) {
-                if (attempts < maxAttempts - 1) {
-                    driver.navigate().refresh();
-                } else {
-                    System.out.println("Не удалось перейти в корзину после нескольких попыток");
-                }
-            } catch (NoSuchElementException | TimeoutException e) {
-                System.out.println("Не удалось перейти в корзину: " + e.getMessage());
-            }
-            attempts++;
-        }
-        return null;
+        header.getLinkBasket().click();
+        return new BasketPage(driver);
     }
-        public MainPage returnMainPage () {
-            driver.navigate().back();
-            return new MainPage(driver);
-        }
+
+    public MainPage returnMainPage() {
+        driver.navigate().back();
+        return new MainPage(driver);
+    }
 
 
-    }
+}

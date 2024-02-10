@@ -4,6 +4,7 @@ package org.example.pages;
 import lombok.Getter;
 import org.openqa.selenium.*;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -19,9 +20,13 @@ public class MainPage extends BasePage {
     public MainPage(WebDriver driver) {
         super(driver);
         this.sortPage = new SortPage(driver);
+        this.popUpProduct = new PopUpProduct(driver);
+        this.popUpProductInCart = new PopUpProductInCart(driver);
     }
 
     private SortPage sortPage;
+    private PopUpProduct popUpProduct;
+    private PopUpProductInCart popUpProductInCart;
     @FindBy(xpath = "//div[@id='city']/span")
     private WebElement availInCity;
     @FindBy(xpath = "//div[@id='discounted_item']/span")
@@ -67,26 +72,36 @@ public class MainPage extends BasePage {
     private List<WebElement> productsPrices;
     @FindBy(xpath = "//div[contains(@class,'ui-library-typography')]/span")
     private WebElement choosedFilter;
+    @FindBy(css = "iframe[src='https://www.googletagmanager.com/ns.html?id=GTM-KH7F6FQ']")
+    private WebElement frameElement;
 
+      private boolean isModalVisible(WebElement closePopUp) {
+        try {
+            return closePopUp.isDisplayed();
+        } catch (NoSuchElementException | StaleElementReferenceException e) {
+            return false;
+        }
+    }
+
+
+    private void closeModal(WebElement closePopUp) {
+        closePopUp.click();
+    }
 
     public MainPage selectCityFilter(Integer index) {
-        try {
-            selectCityCheckbox(index);
-        } catch (Exception e) {
-            openCityFilter();
-            selectCityCheckbox(index);
-        }
+        openCityFilter();
+        selectCityCheckbox(index);
+
         return this;
     }
 
+
     private void selectCityCheckbox(Integer index) {
-        buttonsFilter.get(0).click();
         checkBoxCityNames.get(index).click();
         buttonsFilter.get(0).click();
     }
 
     private void openCityFilter() {
-        availInCity.click();
         new Actions(driver).moveToElement(buttonsFilter.get(0)).click();
         buttonsFilter.get(0).click();
     }
@@ -115,86 +130,68 @@ public class MainPage extends BasePage {
         return true;
     }
 
-
     public ProductPage chooseProductPage(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.visibilityOfAllElements(linksProductPages));
-        new Actions(driver).moveToElement(linksProductPages.get(index)).click().build().perform();
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[@class='product-name']/h1")));
-        return new ProductPage(driver);
-
-    }
-
-    public MainPage putCheckProductCondition(Integer index) {
-        productCond.click();
-        if (index == 1) {
-            new Actions(driver).moveToElement(producerMarks.get(1)).build().perform();
-        }
         try {
+            new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.and(
+                    ExpectedConditions.elementToBeClickable(linksProductPages.get(index)),
+                    ExpectedConditions.visibilityOfAllElements(linksProductPages)));
+            linksProductPages.get(index).click();
+        } catch (TimeoutException | ElementClickInterceptedException e) {
+            if (isModalVisible(popUpProductInCart.getClosePopUp())) {
+                closeModal(popUpProductInCart.getClosePopUp());
+                 }
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.elementToBeClickable(linksProductPages.get(index)));
+            linksProductPages.get(index).click();
+        }
+        return new ProductPage(driver);
+    }
+        public MainPage putCheckProductCondition (Integer index){
+            productCond.click();
+            new Actions(driver).moveToElement(producerMarks.get(1)).build().perform();
             listProductCond.get(index).isDisplayed();
             listProductCond.get(index).click();
-        } catch (StaleElementReferenceException e) {
-            driver.navigate().refresh();
-            productCond.click();
-            if (index == 1) {
-                new Actions(driver).moveToElement(producerMarks.get(1)).build().perform();
-            }
-            listProductCond.get(index).click();
-        }
-        return this;
-    }
-
-    public boolean compareListTitleProductsTextWithProductCondition(String expected, int attempt) {
-        boolean result = false;
-        try {
             new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions.and(
                             ExpectedConditions.visibilityOf(choosedFilter),
-                            ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
+                            ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(listTitleProducts))));
+            return this;
+        }
+
+        public boolean compareListTitleProductsTextWithProductCondition (String expected){
+            boolean result = false;
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.and(
+                            ExpectedConditions.visibilityOf(choosedFilter),
+                            ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(listTitleProducts))));
             List<String> titleProducts = new ArrayList<>();
-            for (WebElement titleProduct : listTitleProducts.subList(0,listTitleProducts.size()-4)) {
+            for (WebElement titleProduct : listTitleProducts.subList(0, listTitleProducts.size() - 4)) {
                 titleProducts.add(titleProduct.getText());
             }
             for (String title : titleProducts) {
                 if (title.toLowerCase().contains(expected.toLowerCase())) {
                     result = true;
-                }else {
-                   return false;
+                } else {
+                    return false;
                 }
             }
             return result;
-        } catch (StaleElementReferenceException e) {
-            if (attempt < 3) {
-                driver.navigate().refresh();
-                return compareListTitleProductsTextWithProductCondition(expected, attempt + 1);
-            } else {
-                return false;
-            }
         }
-    }
-    public MainPage putCheckboxProducerName(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.presenceOfElementLocated(By
-                        .xpath("//div[@id='producer']/following-sibling::div//button")));
-        new Actions(driver).moveToElement(buttonShowAllProducerName).click()
-                .click(producerMarks.get(index)).build().perform();
-        return this;
-    }
 
-    public boolean compareSelectFilterAndProductTitle(Integer index) {
-        int refreshAttempts = 0;
-        while (refreshAttempts < 3) {
+        public MainPage putCheckboxProducerName (Integer index){
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.presenceOfElementLocated(By
+                            .xpath("//div[@id='producer']/following-sibling::div//button")));
+            new Actions(driver).moveToElement(buttonShowAllProducerName).click()
+                    .click(producerMarks.get(index)).build().perform();
+            return this;
+        }
+
+        public boolean compareSelectFilterAndProductTitle (Integer index){
             new WebDriverWait(driver, Duration.ofSeconds(5))
                     .until(ExpectedConditions.and(
                             ExpectedConditions.visibilityOf(choosedFilter),
-                            ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-            if (index < 0 || index >= listTitleProducts.size()) {
-                driver.navigate().refresh();
-                putCheckboxProducerName(index);
-                refreshAttempts++;
-                continue;
-            }
+                            ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(listTitleProducts))));
             String[] selectedFilterOptions = choosedFilter.getText().toLowerCase().trim().split(": ");
             String[] productTitleWords = listTitleProducts.get(index).getText().toLowerCase().trim().split(" ");
             for (String selectedOption : selectedFilterOptions) {
@@ -206,136 +203,124 @@ public class MainPage extends BasePage {
             }
             return false;
         }
-        return false;
-    }
 
-
-    public MainPage putMinMaxValueOfPrice(String priceMin, String priceMax) {
-        try {
+        public MainPage putMinMaxValueOfPrice (String priceMin, String priceMax){
             priceInputNumberRangeMax.click();
             priceInputNumberRangeMax.clear();
             new Actions(driver).pause(Duration.ofSeconds(2)).sendKeys(priceInputNumberRangeMax, priceMax).build().perform();
             priceInputNumberRangeMin.click();
             priceInputNumberRangeMin.clear();
             new Actions(driver).sendKeys(priceInputNumberRangeMin, priceMin).scrollToElement(titleFilters.get(5)).build().perform();
+            if (!isButtonApplyClickable()) {
+                new WebDriverWait(driver, Duration.ofSeconds(10))
+                        .until(ExpectedConditions.elementToBeClickable(buttonApplyPrice));
+            }
             buttonApplyPrice.click();
-        } catch (
-                ElementClickInterceptedException e) {
-            ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", buttonApplyPrice);
-            buttonApplyPrice.click();
+            return this;
         }
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.and(
-                        ExpectedConditions.visibilityOf(choosedFilter),
-                        ExpectedConditions.visibilityOfAllElements(productsPrices)));
-        return this;
-    }
 
-
-    private List<Integer> conversionPriceList() {
-        List<Integer> prices = new ArrayList<>();
-        List<WebElement> visiblePrices = productsPrices.subList(0, productsPrices.size() - 4);
-        for (WebElement productPrice : visiblePrices) {
-            String priceValue = productPrice.getText().replaceAll(" ", "");
-            prices.add(Integer.valueOf(priceValue));
-        }
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.visibilityOfAllElements(visiblePrices));
-        return prices;
-    }
-
-    public boolean isPresentPriceInRange(Integer priceMin, Integer priceMax) {
-        boolean result = false;
-        List<Integer> prices = conversionPriceList();
-        for (Integer price : prices) {
-            if (priceMin <= price && price <= priceMax) {
-                result = true;
-            }else {
+        public boolean isButtonApplyClickable () {
+            try {
+                new WebDriverWait(driver, Duration.ofSeconds(5))
+                        .until(ExpectedConditions.elementToBeClickable(buttonApplyPrice));
+                return true;
+            } catch (TimeoutException e) {
                 return false;
             }
         }
-        return result;
-    }
 
-    public boolean comparePricesOrderOfIncrease() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
-        List<Integer> prices = conversionPriceList();
-        for (int i = 0; i < prices.size() - 1; i++) {
-            if (prices.get(i) > prices.get(i + 1)) {
-                return false;
+        private List<Integer> conversionPriceList () {
+            new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
+                    .refreshed(ExpectedConditions.visibilityOfAllElements(productsPrices)));
+            List<Integer> prices = new ArrayList<>();
+            List<WebElement> visiblePrices = productsPrices.subList(0, productsPrices.size() - 4);
+            for (WebElement productPrice : visiblePrices) {
+                String priceValue = productPrice.getText().replaceAll(" ", "");
+                prices.add(Integer.valueOf(priceValue));
             }
+            return prices;
         }
-        return true;
-    }
 
-    public boolean comparePricesDescendingOrder() {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(1)));
-        List<Integer> prices = conversionPriceList();
-        for (int i = 0; i < prices.size() - 1; i++) {
-            if (prices.get(i) < prices.get(i + 1)) {
-                return false;
+        public boolean isPresentPriceInRange (Integer priceMin, Integer priceMax){
+            boolean result = false;
+            List<Integer> prices = conversionPriceList();
+            for (Integer price : prices) {
+                if (priceMin <= price && price <= priceMax) {
+                    result = true;
+                } else {
+                    result = false;
+                }
             }
+            return result;
         }
-        return true;
-    }
 
-    private List<String> getVisibleProductTitles() {
-        List<String> titles = new ArrayList<>();
-        for (int i = 0; i < listTitleProducts.size() - 4; i++) {
-            String title = listTitleProducts.get(i).getText();
-            String titleWithoutWord = title.replace("УЦІНКА!", "").trim();
-            titles.add(titleWithoutWord);
+        public boolean comparePricesOrderOfIncrease () {
+            List<Integer> prices = conversionPriceList();
+            for (int i = 0; i < prices.size() - 1; i++) {
+                if (prices.get(i) > prices.get(i + 1)) {
+                    return false;
+                }
+            }
+            return true;
         }
-        return titles;
-    }
 
-    private List<String> sort() {
-        List<String> strings = getVisibleProductTitles();
-        Collections.sort(strings);
-        return strings;
-    }
+        public boolean comparePricesDescendingOrder () {
+            List<Integer> prices = conversionPriceList();
+            for (int i = 0; i < prices.size() - 1; i++) {
+                if (prices.get(i) < prices.get(i + 1)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private List<String> getVisibleProductTitles () {
+            List<String> titles = new ArrayList<>();
+            for (int i = 0; i < listTitleProducts.size() - 4; i++) {
+                String title = listTitleProducts.get(i).getText();
+                String titleWithoutWord = title.replace("УЦІНКА!", "").trim();
+                titles.add(titleWithoutWord);
+            }
+            return titles;
+        }
+
+        private List<String> sort () {
+            List<String> strings = getVisibleProductTitles();
+            Collections.sort(strings);
+            return strings;
+        }
 
 
-    public boolean comparisonProductHeaderSorting() {
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.and(
-                ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)),
-                ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-        List<String> sortedTitles = sort();
-        List<String> visibleTitles = getVisibleProductTitles();
-        return sortedTitles.equals(visibleTitles);
-    }
+        public boolean comparisonProductHeaderSorting () {
+            List<String> sortedTitles = sort();
+            List<String> visibleTitles = getVisibleProductTitles();
+            return sortedTitles.equals(visibleTitles);
+        }
 
-    public void chooseSortAndRetrieveTitles(Integer index) {
-        getSortPage().chooseSortName(index);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.and(
-                        ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)),
-                        ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-        getVisibleProductTitles();
-    }
+        public void chooseSortAndRetrieveTitles (Integer index){
+            getSortPage().chooseSortName(index);
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
+            getVisibleProductTitles();
+        }
 
-    private List<String> sortReverse() {
-        List<String> strings = getVisibleProductTitles();
-        strings.sort(Collections.reverseOrder());
-        return strings;
-    }
+        private List<String> sortReverse () {
+            List<String> strings = getVisibleProductTitles();
+            strings.sort(Collections.reverseOrder());
+            return strings;
+        }
 
-    public boolean comparisonReverseSortingProductTitles() {
-        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.and(
-                ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)),
-                ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-        List<String> strings = sortReverse();
-        List<String> actualTitles = getVisibleProductTitles();
-        return actualTitles.equals(strings);
-    }
+        public boolean comparisonReverseSortingProductTitles () {
+            List<String> strings = sortReverse();
+            List<String> actualTitles = getVisibleProductTitles();
+            return actualTitles.equals(strings);
+        }
 
-    public void chooseSortAndRetrieveTitlesInReverseOrder(Integer index) {
-        getSortPage().chooseSortName(index).chooseSortName(index);
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.and(
-                        ExpectedConditions.elementToBeClickable(sortPage.getSortsNames().get(2)),
-                        ExpectedConditions.visibilityOfAllElements(listTitleProducts)));
-        getVisibleProductTitles();
+        public void chooseSortAndRetrieveTitlesInReverseOrder (Integer index){
+            getSortPage().chooseSortName(index).chooseSortName(index);
+            new WebDriverWait(driver, Duration.ofSeconds(5))
+                    .until(ExpectedConditions.refreshed(ExpectedConditions
+                            .visibilityOfAllElements(listTitleProducts)));
+            getVisibleProductTitles();
+        }
     }
-}

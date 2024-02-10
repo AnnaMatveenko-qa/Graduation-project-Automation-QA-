@@ -25,53 +25,33 @@ public class BasketPage extends BasePage {
     }
 
     public BasketPage deleteProductFromBasket(Integer index) {
-        int attempts = 0;
-        int maxAttempts = 3;
-        while (attempts < maxAttempts) {
-            try {
-                buttonDeleteProduct.get(index).isDisplayed();
-                new Actions(driver).moveToElement(buttonDeleteProduct.get(index)).click().build().perform();
-                return new BasketPage(driver);
-            } catch (NoSuchElementException | StaleElementReferenceException exception) {
-                driver.navigate().refresh();
-                deleteProductFromBasket(index);
-                attempts++;
-            }
-        }
-        return null;
+        new Actions(driver).moveToElement(buttonDeleteProduct.get(index)).click().build().perform();
+        new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
+               .refreshed(ExpectedConditions.invisibilityOf(titleAddedProduct.get(index))));
+        return new BasketPage(driver);
+
     }
 
 
     public String getActualFromTitleAddedProduct(Integer index) {
-        new WebDriverWait(driver, Duration.ofSeconds(5))
-                .until(ExpectedConditions.visibilityOfAllElements(titleAddedProduct));
         titleAddedProduct.get(index).isDisplayed();
         return titleAddedProduct.get(index).getText().toLowerCase();
+
     }
 
-    public boolean isPresentProductInBasket(String expected) {
-        boolean result= false;
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(5))
-                    .until(ExpectedConditions.stalenessOf(titleAddedProduct.get(1)));
-        } catch (TimeoutException e) {
-            driver.navigate().refresh();
+    public boolean isAbsentProductInBasket(String expected) {
+        if (titleAddedProduct.isEmpty()) {
+            return true;
         }
-        try {
-            new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.and(
-                    ExpectedConditions.refreshed(ExpectedConditions.visibilityOfAllElements(titleAddedProduct)),
-                    ExpectedConditions.refreshed(ExpectedConditions.presenceOfAllElementsLocatedBy(By
-                            .xpath("//div[@class='title']/a")))));
-        } catch (TimeoutException e) {
-            driver.navigate().refresh();
-            for (WebElement product : titleAddedProduct) {
-                String actual = product.getText().toLowerCase();
-                if (actual.equals(expected.toLowerCase())) {
-                    result = true;
-                }else {
-                    result=false;
-                }
+        for (WebElement product : titleAddedProduct) {
+            String actual = product.getText().toLowerCase();
+            if (actual.equals(expected.toLowerCase())) {
+                return false;
             }
-        }return  result;
+        }
+        return true;
     }
 }
+
+
+

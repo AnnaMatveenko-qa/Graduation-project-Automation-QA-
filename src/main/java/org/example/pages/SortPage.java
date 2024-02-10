@@ -11,7 +11,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -32,11 +31,14 @@ public class SortPage extends BasePage {
                 if (sortsNames.get(index).isEnabled()) {
                     sortsNames.get(index).click();
                     isClicked = true;
-                    } else {
-                      driver.navigate().refresh();
-                    }
-                 } catch (StaleElementReferenceException e) {
-                driver.navigate().refresh();
+                } else {
+                    new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions.refreshed(ExpectedConditions
+                            .elementToBeClickable(sortsNames.get(index))));
+                    sortsNames.get(index).click();
+                }
+            } catch (StaleElementReferenceException e) {
+                      e.getMessage();
+
             }
         }
         return this;

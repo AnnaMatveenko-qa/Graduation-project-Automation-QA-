@@ -16,11 +16,7 @@ public class BasketTest extends BaseTest {
         ProductPage productPage = mainPage.chooseProductPage(3);
         String expected = productPage.getTitleProduct();
         BasketPage basketPage = productPage.addProductToBasket().goToBasket();
-        if (basketPage != null) {
-            Assert.assertEquals(basketPage.getActualFromTitleAddedProduct(0), expected);
-        } else {
-            System.out.println("Failed to add product to basket after multiple attempts");
-        }
+        Assert.assertEquals(basketPage.getActualFromTitleAddedProduct(0), expected);
     }
 
     @Test(invocationCount = NUMBER_OF_STARTS)
@@ -28,16 +24,12 @@ public class BasketTest extends BaseTest {
     public void deleteProductFromCart() {
         MainPage mainPage = new MainPage(driver);
         ProductPage productPage = mainPage.chooseProductPage(10);
-        String firstExpected = productPage.getTitleProduct();
+       String firstExpected = productPage.getTitleProduct();
         BasketPage basketPage = productPage.addProductToBasket().returnMainPage()
                 .chooseProductPage(5).addProductToBasket().goToBasket();
-        if (basketPage != null) {
-            String expected = basketPage.getActualFromTitleAddedProduct(1);
-            Assert.assertEquals(firstExpected, expected);
-            basketPage.deleteProductFromBasket(1);
-            Assert.assertFalse(basketPage.isPresentProductInBasket(expected));
-        } else {
-            System.out.println("Failed to add product to basket after multiple attempts");
-        }
+        String expected = basketPage.getActualFromTitleAddedProduct(1);
+        Assert.assertEquals(firstExpected, expected);
+        basketPage.deleteProductFromBasket(1);
+        Assert.assertTrue(basketPage.isAbsentProductInBasket(expected));
     }
 }
