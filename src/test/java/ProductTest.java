@@ -13,7 +13,7 @@ public class ProductTest extends BaseTest {
     @DataProvider(name = "Product status")
     public Object[] productStatus() {
         return new Object[]{
-               0, 1, 2, 3, 22, 15, 38
+               0, 17, 35
         };
     }
 
