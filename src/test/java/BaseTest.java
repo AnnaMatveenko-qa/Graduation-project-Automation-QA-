@@ -1,3 +1,4 @@
+import io.qameta.allure.Allure;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -46,8 +47,9 @@ public abstract class BaseTest {
 
 
     @AfterMethod
-    public void tearDown(ITestResult result) {
+    public void tearDown(ITestResult result) throws IOException {
         if (result.getStatus() == ITestResult.FAILURE && driver != null) {
+            deleteScreenshotIfExists(result);
             takeScreenshot(result);
         }
         if (driver != null) {
@@ -55,23 +57,50 @@ public abstract class BaseTest {
             driver.quit();
         }
     }
+     private  byte[] takeScreenshot(ITestResult result) {
+         try {
+             setBrowserZoom(driver,80);
+             File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+             byte[] screenshotBytes = FileUtils.readFileToByteArray(screenshot);
+             saveScreenshot(screenshot, result.getName() + "_screenshot.png");
+             return screenshotBytes;
+         } catch (IOException e) {
+             e.printStackTrace();
+         }
+         return new byte[0];
+     }
 
-    private void takeScreenshot(ITestResult result) {
-        if (result.getStatus() == ITestResult.FAILURE) {
-            try {
-                setBrowserZoom(driver, 80);
-                File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                String screenshotName = result.getName() + "_screenshot.png";
-                FileUtils.copyFile(screenshot, new File("src/main/resources/" + screenshotName));
-                System.out.println("Screenshot captured: " + screenshotName);
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void saveScreenshot(File screenshot, String fileName) {
+        try {
+            String directory = "src/main/resources/";
+            File directoryPath = new File(directory);
+            if (!directoryPath.exists()) {
+                directoryPath.mkdirs();
             }
+            FileUtils.copyFile(screenshot, new File(directory + fileName));
+            Allure.addAttachment("Screenshot", FileUtils.openInputStream(new File(directory + fileName)));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
     private void setBrowserZoom(WebDriver driver, double zoomLevel) {
         String script = "document.body.style.zoom='" + zoomLevel + "%'";
         ((JavascriptExecutor) driver).executeScript(script);
+    }
+
+   private void deleteScreenshotIfExists(ITestResult result) {
+        String directory = "src/main/resources/";
+        String fileName = result.getName() + "_screenshot.png";
+        File screenshotFile = new File(directory + fileName);
+        if (screenshotFile.exists()) {
+            boolean deleted = screenshotFile.delete();
+            if (deleted) {
+                System.out.println("Screenshot file deleted successfully.");
+            } else {
+                System.out.println("Failed to delete the screenshot file.");
+            }
+        }
     }
 
 
@@ -79,4 +108,6 @@ public abstract class BaseTest {
     public void tearDownClass() {
         WebDriverManager.chromedriver().quit();
     }
+
+
 }
