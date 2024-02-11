@@ -18,7 +18,7 @@
     </test>
     <test name = "product">
     <classes>
-        <class name="ProductPageTest"/>
+        <class name="ProductTest"/>
     </classes>
     </test>
 </suite>
