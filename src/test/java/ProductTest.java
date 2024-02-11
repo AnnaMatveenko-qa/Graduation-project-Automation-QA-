@@ -13,7 +13,7 @@ public class ProductTest extends BaseTest {
     @DataProvider(name = "Product status")
     public Object[] productStatus() {
         return new Object[]{
-               0,1,2,3,22,15,38
+               0, 1, 2, 3, 22, 15, 38
         };
     }
 
@@ -22,7 +22,7 @@ public class ProductTest extends BaseTest {
     @Description(value = "check for product status on the product page")
     @Owner("Anna Matveenko")
     public void checkProductStatus(Integer index) {
-        String fileName = "inputText.txt";
+        String fileName = "ProductWithStatusAndName.txt";
         MainPage mainPage = new MainPage(driver);
         ProductPage productPage = mainPage.chooseProductPage(index);
         Assert.assertTrue(productPage.statusProduct());

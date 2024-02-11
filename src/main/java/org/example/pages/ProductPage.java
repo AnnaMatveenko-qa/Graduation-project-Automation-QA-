@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -75,8 +76,10 @@ public class ProductPage extends BasePage {
                 || productStatus.getText().equalsIgnoreCase(SALES);
     }
 
-    public void writeText(String fileName, String text) {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(fileName, true)) {
+    public void writeText(String fileName,String text) {
+        String directoryPath = "src/main/resources";
+        String filePath = directoryPath + File.separator + fileName;
+        try (FileOutputStream fileOutputStream = new FileOutputStream(filePath, true)) {
             String textWithNewLine = text + System.lineSeparator();
             fileOutputStream.write(textWithNewLine.getBytes());
         } catch (FileNotFoundException e) {

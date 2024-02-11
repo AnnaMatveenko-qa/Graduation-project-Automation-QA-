@@ -22,8 +22,9 @@ public abstract class BaseTest {
 
     @BeforeClass(groups = "product")
     public void deleteFileIfExists() {
-        String fileName = "inputText.txt";
-        File file = new File(fileName);
+        String projectDirectory = System.getProperty("src/main/resources");
+        String fileName = "ProductWithStatusAndName.txt";
+        File file = new File(projectDirectory + File.separator + fileName);
         if (file.exists()) {
             boolean deleted = file.delete();
             if (!deleted) {
