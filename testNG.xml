@@ -11,7 +11,7 @@
             <class name="SortingTest"/>
         </classes>
     </test>
-     <test name="Cart">
+     <test name="сart">
         <classes>
             <class name="CartTest"/>
         </classes>
