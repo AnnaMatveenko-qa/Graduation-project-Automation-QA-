@@ -72,8 +72,7 @@ public class MainPage extends BasePage {
     private List<WebElement> productsPrices;
     @FindBy(xpath = "//div[contains(@class,'ui-library-typography')]/span")
     private WebElement choosedFilter;
-    @FindBy(css = "iframe[src='https://www.googletagmanager.com/ns.html?id=GTM-KH7F6FQ']")
-    private WebElement frameElement;
+
 
       private boolean isModalVisible(WebElement closePopUp) {
         try {

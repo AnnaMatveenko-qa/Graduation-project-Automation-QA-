@@ -7,11 +7,14 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.time.Duration;
-import java.util.List;
 
 @Getter
 public class ProductPage extends BasePage {
+
     private Header header;
     private PopUpProduct popUpProduct;
     private PopUpProductInCart popUpProductInCart;
@@ -25,7 +28,8 @@ public class ProductPage extends BasePage {
     private WebElement buttonBuyInStore;
     @FindBy(xpath = "//div[@class='product-head-text']")
     private WebElement container;
-
+    @FindBy(xpath = "//div[@class='product-status']//span")
+    private WebElement productStatus;
 
     public ProductPage(WebDriver driver) {
         super(driver);
@@ -47,7 +51,7 @@ public class ProductPage extends BasePage {
 
     }
 
-    public ProductPage addProductToBasket() {
+    public ProductPage addProductToCart() {
         new WebDriverWait(driver, Duration.ofSeconds(5))
                 .until(ExpectedConditions.visibilityOf(buttonBuyInStore));
         buttonBuyInStore.isDisplayed();
@@ -56,9 +60,9 @@ public class ProductPage extends BasePage {
         return this;
     }
 
-    public BasketPage goToBasket() {
+    public CartPage goToCart() {
         header.getLinkBasket().click();
-        return new BasketPage(driver);
+        return new CartPage(driver);
     }
 
     public MainPage returnMainPage() {
@@ -66,5 +70,19 @@ public class ProductPage extends BasePage {
         return new MainPage(driver);
     }
 
+    public boolean statusProduct() {
+        return productStatus.getText().equalsIgnoreCase(IN_STOCK) || productStatus.getText().equalsIgnoreCase(IT_ENDS)
+                || productStatus.getText().equalsIgnoreCase(SALES);
+    }
 
+    public void writeText(String fileName, String text) {
+        try (FileOutputStream fileOutputStream = new FileOutputStream(fileName, true)) {
+            String textWithNewLine = text + System.lineSeparator();
+            fileOutputStream.write(textWithNewLine.getBytes());
+        } catch (FileNotFoundException e) {
+            System.out.println("File not find");
+        } catch (IOException e) {
+            System.out.println("error while reading to file ");
+        }
+    }
 }

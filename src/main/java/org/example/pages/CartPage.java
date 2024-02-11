@@ -9,10 +9,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 
 @Getter
-public class BasketPage extends BasePage {
+public class CartPage extends BasePage {
 
     @FindBy(xpath = "//div[@class='title']/a")
     private List<WebElement> titleAddedProduct;
@@ -20,15 +19,15 @@ public class BasketPage extends BasePage {
     private List<WebElement> buttonDeleteProduct;
 
 
-    public BasketPage(WebDriver driver) {
+    public CartPage(WebDriver driver) {
         super(driver);
     }
 
-    public BasketPage deleteProductFromBasket(Integer index) {
+    public CartPage deleteProductFromCart(Integer index) {
         new Actions(driver).moveToElement(buttonDeleteProduct.get(index)).click().build().perform();
         new WebDriverWait(driver, Duration.ofSeconds(5)).until(ExpectedConditions
                .refreshed(ExpectedConditions.invisibilityOf(titleAddedProduct.get(index))));
-        return new BasketPage(driver);
+        return new CartPage(driver);
 
     }
 
@@ -39,7 +38,7 @@ public class BasketPage extends BasePage {
 
     }
 
-    public boolean isAbsentProductInBasket(String expected) {
+    public boolean isAbsentProductInCart(String expected) {
         if (titleAddedProduct.isEmpty()) {
             return true;
         }
