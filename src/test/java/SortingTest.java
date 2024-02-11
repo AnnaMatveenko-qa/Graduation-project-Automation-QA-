@@ -26,7 +26,7 @@ public class SortingTest extends BaseTest {
         Assert.assertTrue(mainPage.comparePricesDescendingOrder());
     }
 
-    @Test(invocationCount =1) //NUMBER_OF_STARTS)
+    @Test(invocationCount = NUMBER_OF_STARTS)
     @Description(value = "Сheck that the products are arranged by name in direct order")
     @Owner("Anna Matveenko")
     public void sortBeNameUp() {
@@ -35,7 +35,7 @@ public class SortingTest extends BaseTest {
         Assert.assertTrue(mainPage.comparisonProductHeaderSorting());
     }
 
-    @Test(invocationCount =1)// NUMBER_OF_STARTS)
+    @Test(invocationCount = NUMBER_OF_STARTS)
     @Description(value = "check that the products are arranged by name in reverse order")
     @Owner("Anna Matveenko")
         public void sortBeNameDown() {
