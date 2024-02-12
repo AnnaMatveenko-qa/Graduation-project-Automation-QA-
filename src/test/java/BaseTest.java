@@ -54,7 +54,7 @@ public abstract class BaseTest {
 
 
     @AfterMethod
-    public void tearDown(ITestResult result) throws IOException {
+    public void tearDown(ITestResult result) {
         if (result.getStatus() == ITestResult.FAILURE && driver != null) {
             deleteScreenshotIfExists(result);
             takeScreenshot(result);
