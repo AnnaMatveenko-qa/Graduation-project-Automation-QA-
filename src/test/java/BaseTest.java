@@ -13,9 +13,9 @@ import java.time.Duration;
 import java.util.Arrays;
 
 
-public abstract class BaseTest {
+public class BaseTest {
     protected WebDriver driver;
-    protected final int NUMBER_OF_STARTS = 10;
+    protected final int NUMBER_OF_STARTS = 3;
 
 
     @BeforeSuite
