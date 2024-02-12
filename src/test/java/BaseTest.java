@@ -16,7 +16,7 @@ import java.util.Arrays;
 
 public abstract class BaseTest {
     protected WebDriver driver;
-    protected final int NUMBER_OF_STARTS = 1;
+    protected final int NUMBER_OF_STARTS = 10;
 
 
     @BeforeSuite

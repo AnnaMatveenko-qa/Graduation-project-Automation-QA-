@@ -30,7 +30,7 @@ public class FiltersTest extends BaseTest {
     @DataProvider(name = "Price")
     public Object[][] price() {
         return new Object[][]{
-                {"15 000", "75 000"},
+                {"15 000", "72 000"},
                 {"25 000", "35 000"}
         };
     }
