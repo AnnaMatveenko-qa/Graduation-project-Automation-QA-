@@ -13,7 +13,6 @@ import java.time.Duration;
 import java.util.Arrays;
 
 
-
 public abstract class BaseTest {
     protected WebDriver driver;
     protected final int NUMBER_OF_STARTS = 10;
@@ -29,7 +28,7 @@ public abstract class BaseTest {
     public void deleteFileIfExists() {
         String projectDirectory = System.getProperty("src/main/resources");
         String fileName = "ProductWithStatusAndName.txt";
-       File file = new File(projectDirectory + File.separator + fileName);
+        File file = new File(projectDirectory + File.separator + fileName);
         if (file.exists()) {
             boolean deleted = file.delete();
             if (!deleted) {
@@ -41,12 +40,16 @@ public abstract class BaseTest {
 
     @BeforeMethod
     public void InitDriver() throws RuntimeException {
-        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-        this.driver = new ChromeDriver();
-        driver.manage().window().setSize(new Dimension(1600, 900));
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
-        driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
+        try {
+            System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+            this.driver = new ChromeDriver();
+            driver.manage().window().setSize(new Dimension(1600, 900));
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
+            driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
+        } catch (Exception e){
+            throw new RuntimeException("Failed to initialize WebDriver: " + e.getMessage());
+        }
     }
 
 
@@ -58,8 +61,8 @@ public abstract class BaseTest {
         }
         if (driver != null) {
             driver.manage().deleteAllCookies();
-            driver.quit();
-       }
+            this.driver.quit();
+        }
         ITestContext context = result.getTestContext();
         ITestNGMethod[] testMethods = context.getAllTestMethods();
         for (ITestNGMethod testMethod : testMethods) {
