@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public abstract class BaseTest {
     protected WebDriver driver;
-    protected final int NUMBER_OF_STARTS = 2;
+    protected final int NUMBER_OF_STARTS = 10;
 
 
     @BeforeSuite
@@ -44,8 +44,8 @@ public abstract class BaseTest {
             System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
             driver = new ChromeDriver();
             driver.manage().window().setSize(new Dimension(1600, 900));
-            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
-            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(40));
+            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
             driver.get("https://eldorado.ua/uk/holodilniki/c1061560/");
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize WebDriver: " + e.getMessage());
